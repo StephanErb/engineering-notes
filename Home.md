@@ -1,1 +1,0 @@
-Welcome to the static-void-web wiki!
