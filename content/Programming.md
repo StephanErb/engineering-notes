@@ -2,9 +2,9 @@
 
 ## Common Principles
 * Think hard before you start. 
-* Eliminate distractions and obstacles. If you cannot stay within _the flow_, you are doing something wrong.
+* Focus. Eliminate distractions and obstacles. If you cannot stay within _the flow_, you are doing something wrong.
 * _Make it_, _make it run_ (so that the tests pass), _make it better_ (review and refactor until you can honestly say that it is good enough)
-* If in doubt, leave it out (abstractions, features, ...), because _you ain't gonna need it (YAGNI)!_
+* If in doubt, leave it out (abstractions, features, ...), because _you ain't gonna need it (YAGNI)!_ You can always come back later. Don't waste your time now.
 
 ## Object-oriented Programming
 * Using an OO-language does not imply you _'got it'_ and are doing it right.
