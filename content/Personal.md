@@ -24,5 +24,5 @@
 * Challenge the student by constantly asking questions. Let the student prove they got it. Set a high pace.
 
 # Sources
-* [There's no speed limit](http://sivers.org/kimo) and [6 things I wish I knew the day I started Berklee] (http://sivers.org/berklee) by Derek Sivers
+* [There's no speed limit](http://sivers.org/kimo) and [6 things I wish I knew the day I started Berklee](http://sivers.org/berklee) by Derek Sivers
 
