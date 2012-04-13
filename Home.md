@@ -10,13 +10,13 @@ We also try to document some of our occasional nuggets of temporary insights.
 ## Sources to review
 * Study notes
     - Compiler Construction 
-    - Experimental Economics: Design Elements (e.g., basline neighborhood) and the basic idea of falsification as supplement material for the algorithm engineering notes
+    - Experimental Economics: Design Elements (e.g., baseline neighborhood) and the basic idea of falsification as supplement material for the algorithm engineering notes
     - Formal Systems (something in there?)
     - ~~Advanced Data Structures~~
     - Parallel Algorithms
     - Parallel Machines and Parallel Programming
     - Randomized Algorithms
-    - Computerarchitecture (implications of branch predictions, cache coherece, pipelining, super scalar architecutures ...)
+    - Computerarchitecture (implications of branch predictions, cache coherence, pipelining, super scalar architecutures ...)
     - Softwareengineering II
     - Game Theory (Battle of the sexes :p) 
 * Lecture notes and books to skim

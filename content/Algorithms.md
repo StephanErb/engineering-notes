@@ -1,6 +1,9 @@
-# Algorithm & Datastructures Design Toolbox
+# Algorithm & Data Structures Design Toolbox
 
-## Data Structure Use & Abuse
+## Data Structure Abuse
+Most applications come away
+
+## Data Structure Use
 
 ### Trie
 A _trie_ is a special kind of edge labeled tree. If used over a collection of keys, it can be used to find the significant difference between these keys (i.e., the _important bit positions_ sufficient to distinguish all keys). For sorted sequences it can be constructed in $\mathcal{O}(n)$. Examples:
@@ -10,18 +13,18 @@ A _trie_ is a special kind of edge labeled tree. If used over a collection of ke
 * _[Signature Sort]_ splits keys into chunks and compresses these chunks using a hash function. A trie is then used to filter the chunks that are not relevant for the sort order of the keys. The keys therefore become smaller and sorting them becomes easier.
 
 ## Recurring Design Ideas
-There seem to be some simple ideas that have influenced the desgin of many algorithms and datastructures. This list is not authoritative (in particular w.r.t. to naming), it just lists some observations. The ideas seem to be heavily connected and seldomly used in isolation. 
+There seem to be some simple ideas that have influenced the design of many algorithms and data structures. This list is not authoritative (in particular w.r.t. to naming), it just lists some observations. The ideas seem to be heavily connected and seldomly used in isolation. 
 
 * __Tradeoff:__ Inspect simple, naive solutions with contradicting space and runtime bounds (e.g, online computation vs. precomputation of all results) and try to find a tradeoff that achieves the best of both worlds. So for example, instead of precoumputing all results, precompute just a particular subset. Examples:
     - [Level Ancestor Queries][] (to find the tree-ancestor on a particular level) can be approached using _jump pointers_ and _ladder decomposition_, which both precompute a subset of all potential queries and run in $\mathcal{O}(\log n)$ time. However, a combination of both leads to constant query time and a linear space requirement, thus heavily improving over the computation of all results.
 
-* __Combination:__ Combine several different datastructures so that expensive operations of one datastructure can be improved using a specialized data structure for this particular sub-problem. Examples:
+* __Combination:__ Combine several different data structures so that expensive operations of one data structure can be improved using a specialized data structure for this particular sub-problem. Examples:
     - _[String B-Trees]_ build _Patricia Tries_ on top of individual B-Tree nodes to improve over the binary search to find the insertion point within the keys of a node.
 
 * __Indirection/Bucketing:__ Instead of working on a large problem set (with larger accompanying space & runtime bounds), first find a suitable bucket and then solve the problem only within this particular bucket. Examples:
-    - _Perfect Hashing_ uses an indirection so that it is not required to find a perfect (injective) hash function for all elemenets, but only for the elements within the same collision bucket. This reduces the overall space requirement while retaining the expected construction and query time.
+    - _Perfect Hashing_ uses an indirection so that it is not required to find a perfect (injective) hash function for all elements, but only for the elements within the same collision bucket. This reduces the overall space requirement while retaining the expected construction and query time.
     - _Y-Fast Tries_ improve upon the space requirements of _X-Fast Tries_ by building the trie over representatives of buckets instead of over all elements. The buckets are implemented as balanced binary trees and do not just reduce the space requirement of _X-Fast Tries_ but also help to reduce update costs using amortization. 
-    - _Succinct Data Structures_ can profit from indirection layers as they reduce the number of elements that have to be distinguished from the whole universe down to all elements within a bucket. Thus, to dinstinguish these elements less bits are required.
+    - _Succinct Data Structures_ can profit from indirection layers as they reduce the number of elements that have to be distinguished from the whole universe down to all elements within a bucket. Thus, to distinguish these elements less bits are required.
 
 * __Decomposition:__ Instead of dealing with elements of objects as a whole, split them into logical subparts. Exploit this inner structure to achieve higher efficiency and eventually solve the problem within a richer model of computation (e.g., compare bits instead of whole integers) . Examples:
     - _X-Fast Tries_ split integer keys into their common prefixes and use a binary search to find the longest common prefix. 
@@ -57,6 +60,6 @@ Succinct Data Structures are space efficient implementations of abstract data ty
 [Approximate Distance Oracles]: http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.94.333
     (Approximate Distance Oracles)
 [Fusion Trees]: http://stephanerb.eu/files/erb2011b_Fusion_Trees.pdf
-    (KIT Lecture Notes on Advanced Datastructures: Fusion Trees)
+    (KIT Lecture Notes on Advanced Data Structures: Fusion Trees)
 [Signature Sort]: http://algo2.iti.kit.edu/download/ads_lec6.pdf
-    (KIT Lecture Notes on Advanced Datastructures: Signature Sort)
+    (KIT Lecture Notes on Advanced Data Structures: Signature Sort)
