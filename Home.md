@@ -12,7 +12,7 @@ We also try to document some of our occasional nuggets of temporary insights.
     - Compiler Construction 
     - Experimental Economics: Design Elements (e.g., basline neighborhood) and the basic idea of falsification as supplement material for the algorithm engineering notes
     - Formal Systems (something in there?)
-    - Advanced Data Structures
+    - ~~Advanced Data Structures~~
     - Parallel Algorithms
     - Parallel Machines and Parallel Programming
     - Randomized Algorithms
