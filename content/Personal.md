@@ -15,8 +15,6 @@
 * Always write down key insights as succinctly and precicely as possible. Feel the pain. You have to do it, because it is a different thing to believe to understand something and to be able to articulate it.
 * If stuck with anything, ask yourself _what exactly__ is it, that you don't understand? (See the notes on debugging).
 
-
-
 ## Stress & Burnout Prehab
 * Stress kills creativity and gives you a bad hangover. Don't get back to work just because you are bored. Once your creativity returns (with ideas on cool projects, the strong desire to read one the countless unread books on your shelf, people you really want to meet again, ...) you will feel more energetic than ever and can re-approach your life (and work) with a whole new mind.
 
