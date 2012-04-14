@@ -9,6 +9,7 @@
 ## Object-oriented Programming
 * Using an OO-language does not imply you _'got it'_ and are doing it right.
 * If nothing else, do atleast try to follow the _tell, don't ask_ principle. 
+
 ## Testing
 * Look for _inflection points_ as the sweet spot between testing effort and covered functionality.
 
