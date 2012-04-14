@@ -1,9 +1,13 @@
 # Algorithm & Data Structures Design Toolbox
 
-## Data Structure Abuse
-Most applications come away
+## Data Structures
+Many applications just rely on dynamic list structures, hashmaps and sorting. This is fine in most cases. However, here are some observations:
 
-## Data Structure Use
+* _Orderness_ seems to be underutilized. Instead of storing elements without a particular order, consider keeping them sorted. This can help to [speed up operations][SICP on Sets] on them. So for example, instead of hashing and sorting, also consider an ordered associative array (e.g., Java's `SortedMap` or `NaviagableMap`).
+* Integer keys seem to be underutilized. This also implies that hashing is favored in cases where plain arrays or bit sets (e.g., Java's `BitSet`) would do just fine (and would even be faster and require less space). Therefore, consider enumerating the elements you are dealing with.
+* Using the implementation of an abstract data type does not relieve from having a good mental model of its associate costs. For example, when using a resizable array implementation (e.g. Java's `ArrayList`):
+    - Try to avoid inserts/deletes at all positions beside the end of the list, as these require the array to be shifted.
+    - When the number of elements that the list shall hold is known, but elements can only be inserted one by one, correctly initialize the list in order to avoid the numerous internal array copies.
 
 ### Trie
 A _trie_ is a special kind of edge labeled tree. If used over a collection of keys, it can be used to find the significant difference between these keys (i.e., the _important bit positions_ sufficient to distinguish all keys). For sorted sequences it can be constructed in $\mathcal{O}(n)$. Examples:
@@ -11,6 +15,7 @@ A _trie_ is a special kind of edge labeled tree. If used over a collection of ke
 * _[Fusion Trees]_ compress keys within _B-Tree_ nodes by reducing them to the bits at the important bit positions. All keys of a node can then be fused into a single machine word and compared to a query element in parallel using a single bitparallel subtraction.
 * _[String B-Trees]_ use _Patricia Tries_ to identify the subset of characters relevant for the comparison of a string pattern to the keys of a _B-Tree_. Knowing these characters and the lengths of the common prefixes of keys,  the number of required I/Os per traversal can be limited.
 * _[Signature Sort]_ splits keys into chunks and compresses these chunks using a hash function. A trie is then used to filter the chunks that are not relevant for the sort order of the keys. The keys therefore become smaller and sorting them becomes easier.
+
 
 ## Recurring Design Ideas
 There seem to be some simple ideas that have influenced the design of many algorithms and data structures. This list is not authoritative (in particular w.r.t. to naming), it just lists some observations. The ideas seem to be heavily connected and seldomly used in isolation. 
@@ -63,3 +68,5 @@ Succinct Data Structures are space efficient implementations of abstract data ty
     (KIT Lecture Notes on Advanced Data Structures: Fusion Trees)
 [Signature Sort]: http://algo2.iti.kit.edu/download/ads_lec6.pdf
     (KIT Lecture Notes on Advanced Data Structures: Signature Sort)
+[SICP on Sets]: http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-16.html#%_sec_2.3.3
+    (SICP: Building Abstractions with Data. Example: Representing Sets)
