@@ -42,9 +42,13 @@ There seem to be some simple ideas that have influenced the design of many algor
     - The _findclose_ operation on _Succinct Trees_ finds the position of a closing bracket within the bitstring representing the tree. The idea is to solve the problem for a corresponding, so-called pioneer and then deduce the actual closing position from the closing position of the corresponding pioneer.
 
 * __Broadword Computing:__ Fuse data elements into machine words and run operation on then in parallel, instead of sequentially. You can get more done within fewer instructions and without having to hit memory.
-    - _Fusion Trees_ compare several integer keys with a single bitparallel computation.
+    - _[Fusion Trees]_ compare several integer keys with a single bitparallel computation.
     - _Packed Sorting_ is a variant of mergesort that packs several short integer keys into a machine word. It then uses bitparallel computations to speed up the base case and the merge of sorted words. In particular, it relies on a bitparallel version of _Bitonic Sorting_.
 
+* __Two Phase Computation:__ If something is complicated (and thus slow) to do in a single pass, feel free to use several phases. Examples:
+    - _[Super Scalar Sample Sort]_ sorts in two phases....
+    - Pipelined Prefix Sum (Paralag und Sanders Paper?)
+    - All to all for irregular message sizes 
 
 ## Succinct Data Structures
 Succinct Data Structures are space efficient implementations of abstract data types (e.g., trees, bit sets) that still allow for efficient queries. 
@@ -56,6 +60,30 @@ Succinct Data Structures are space efficient implementations of abstract data ty
 * Never use the `C` `rand()` function. If in doubt, use _Mersenne Twister_.
 * Use random numbers with care. Treat them as a scarce resource.
 * In certain parallel setups, _expected_ bounds of randomized algorithms do no longer hold: Consider `n` processes that call operations with _expected_ runtime bounds and that have to be synchronized before and afterwards. The runtime will suffer whenever at least one of the processes hits an expensive case. 
+
+
+## Parallel Algorithms
+PE stands for _processing element_ (i.e., an actively running thread).
+
+* Start with a simple PRAM algorithms and take as many PEs as you want to and place them in an appropriate layout (e.g., hypercube, 3D-cube, 2D-grid). This allows you to learn about the problem and how it can be parallelized. Commonly, the next step is then to apply _Brent's Principle_ to make the algorithm more efficient by reducing the number of PEs. This can be done by decoupling the strict mapping of elements to PEs and assigning $\frac{n}{p}$ elements per PE for a now arbitrary $p$.
+
+* Obviously, PEs should never idle. This implies several things:
+    - Tree-shaped communication paths and pipelining can help to distribute data more quickly, so that all PEs can start working earlier.
+    - Expose the parallelization from the beginning (e.g., don't spawn threads for the multiple recursive calls within a recursive algorithms such as quicksort)
+
+* Load balancing is important at the core of many parallel algorithms. Some examples:
+    - Sample sort uses samples to find splitters that split up the data in (hopefully) equally sized chunks. Each PE is then responsible to sort one of these chunks.
+    - Prefix-sums / scan operations are commonly used to enumerate items on the different PEs. Knowing how many of these items exist in total and on each predecessor PE, the items can be distributed equally.
+    - Master-Worker does not scale very well :-).
+
+* Long paths (e.g., linked-lists, long paths within trees) are difficult to parallelize. Sorting the nodes of a path (e.g., via _list ranking_ based on _doubling_ and _independent set removal_) and storing them in an array, enables parallelization. Every PE can then operate on a particular index-range on the array.
+
+
+## Algorithm Engineering
+Always run your experiments on:
+
+* different architectures (e.g., current Intel, AMD, MIPS to cover both CISC and RISC architectures)
+* different types of inputs (e.g., uniformly distributed, skewed)
 
 
 [Level Ancestor Queries]: http://cg.scs.carleton.ca/~morin/teaching/5408/refs/bf-c04.pdf
@@ -70,3 +98,5 @@ Succinct Data Structures are space efficient implementations of abstract data ty
     (KIT Lecture Notes on Advanced Data Structures: Signature Sort)
 [SICP on Sets]: http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-16.html#%_sec_2.3.3
     (SICP: Building Abstractions with Data. Example: Representing Sets)
+[Super Scalar Sample Sort]: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.72.366&rep=rep1&type=pdf
+    (A fast variant of Sample Sort for super scalar architectures)
