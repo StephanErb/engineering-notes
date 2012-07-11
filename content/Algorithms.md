@@ -16,6 +16,8 @@ A _trie_ is a special kind of edge labeled tree. If used over a collection of ke
 * _[String B-Trees]_ use _Patricia Tries_ to identify the subset of characters relevant for the comparison of a string pattern to the keys of a _B-Tree_. Knowing these characters and the lengths of the common prefixes of keys,  the number of required I/Os per traversal can be limited.
 * _[Signature Sort]_ splits keys into chunks and compresses these chunks using a hash function. A trie is then used to filter the chunks that are not relevant for the sort order of the keys. The keys therefore become smaller and sorting them becomes easier.
 
+### Suffix Arrays and Suffix Trees
+TODO once studied.
 
 ## Recurring Design Ideas
 There seem to be some simple ideas that have influenced the design of many algorithms and data structures. This list is not authoritative (in particular w.r.t. to naming), it just lists some observations. The ideas seem to be heavily connected and seldomly used in isolation. 
@@ -46,7 +48,7 @@ There seem to be some simple ideas that have influenced the design of many algor
     - _Packed Sorting_ is a variant of mergesort that packs several short integer keys into a machine word. It then uses bitparallel computations to speed up the base case and the merge of sorted words. In particular, it relies on a bitparallel version of _Bitonic Sorting_.
 
 * __Two Phase Computation:__ If something is complicated (and thus slow) to do in a single pass, feel free to use several phases. Examples:
-    - _[Super Scalar Sample Sort]_ sorts in two phases....
+    - _[Super Scalar Sample Sort]_ sorts in two phases. In the first pass it is only decides in which bucket an element shall be assigned to. The actual data movement into the preallocated subarrays is then performed in the second pass once the total bucket sizes are known.
     - Pipelined Prefix Sum (Paralag und Sanders Paper?)
     - All to all for irregular message sizes 
 
@@ -63,23 +65,45 @@ Succinct Data Structures are space efficient implementations of abstract data ty
 
 
 ## Parallel Algorithms
-PE stands for _processing element_ (i.e., an actively running thread).
+Goal is to come up with a parallel algorithm that has an appropriate computation / communication ratio for the target architecture (e.g., more coarse grained for NORMA or NUMA systems than for SMP systems).
 
-* Start with a simple PRAM algorithms and take as many PEs as you want to and place them in an appropriate layout (e.g., hypercube, 3D-cube, 2D-grid). This allows you to learn about the problem and how it can be parallelized. Commonly, the next step is then to apply _Brent's Principle_ to make the algorithm more efficient by reducing the number of PEs. This can be done by decoupling the strict mapping of elements to PEs and assigning $\frac{n}{p}$ elements per PE for a now arbitrary $p$.
+A rough roadmap (see Foster):
+
+1. Start with the problem. Not with an particular algorithm.
+2. Partition the problem (Use _Domain_ Decomposition or _Functional_ Decomposition. See below. You can even combine both recursively.). Expose as much parallelism as possible. Find all the concurrent tasks.
+3. Understand the communication paths and required data flow.
+4. Aim to reduce communication costs by merging some of the fine-grained tasks that have too many data-dependencies or by duplicating some of the computations whose results are required by many different tasks.
+5. Map the resulting tasks to the target architecture and its available PEs. Aim to reduce the overall execution time by allocating the tasks wisely. If required, add a load-balancing mechanism.
 
 * Obviously, PEs should never idle. This implies several things:
     - Tree-shaped communication paths and pipelining can help to distribute data more quickly, so that all PEs can start working earlier.
     - Expose the parallelization from the beginning (e.g., don't spawn threads for the multiple recursive calls within a recursive algorithms such as quicksort)
 
-* Load balancing is important at the core of many parallel algorithms. Some examples:
-    - Sample sort uses samples to find splitters that split up the data in (hopefully) equally sized chunks. Each PE is then responsible to sort one of these chunks.
-    - Prefix-sums / scan operations are commonly used to enumerate items on the different PEs. Knowing how many of these items exist in total and on each predecessor PE, the items can be distributed equally.
-    - Master-Worker does not scale very well :-).
+
+
+### Functional Decomposition
+Inspect the different computation steps. Group them to components that can operate in parallel. Finally, inspect the data required by the different components. 
+
+Functional decomposition yields modular program but which has often a limited scalability.
+
+Examples: A pipeline is a special kind of functional decomposition.
+
+
+### Data Parallelism / Domain Decomposition
+A partitioning of the data (applies to input, output or heavily used data structures) with a parallel computation on the different partitions.
+
+* Start with a simple PRAM algorithms and take as many PEs as you want to and place them in an appropriate layout (e.g., hypercube, 3D-cube, 2D-grid). This allows you to learn about the problem and how it can be parallelized. Commonly, the next step is then to apply _Brent's Principle_ to make the algorithm more efficient by reducing the number of PEs. This can be done by decoupling the strict mapping of elements to PEs and assigning $\frac{n}{p}$ elements per PE for a now arbitrary $p$.
 
 * Long paths (e.g., linked-lists, long paths within trees) are difficult to parallelize. Sorting the nodes of a path (e.g., via _list ranking_ based on _doubling_ and _independent set removal_) and storing them in an array, enables parallelization. Every PE can then operate on a particular index-range on the array.
 
+* Load balancing is important and therefore at the core of many parallel algorithms. Some examples:
+    - Sample sort uses samples to find splitters that split up the data in (hopefully) equally sized chunks. Each PE is then responsible to sort one of these chunks.
+    - Prefix-sums / scan operations are commonly used to enumerate items on the different PEs. Knowing how many of these items exist in total and on each predecessor PE, the items can be distributed equally.
+
 
 ## Algorithm Engineering
+Performance depends on technological properties of machines like parallelism, data dependencies and memory hierarchies. These play a role even in lower order terms.
+
 Always run your experiments on:
 
 * different architectures (e.g., current Intel, AMD, MIPS to cover both CISC and RISC architectures)
