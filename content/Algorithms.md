@@ -55,6 +55,13 @@ There seem to be some simple ideas that have influenced the design of many algor
 ## Succinct Data Structures
 Succinct Data Structures are space efficient implementations of abstract data types (e.g., trees, bit sets) that still allow for efficient queries. 
 
+A common implementation technique is to split the data structure / problem into blocks:
+
+* on the first block level, the blocks are few enough so that we can spend many bits for each pre-computed result per block
+* on the second block level which splits existing blocks into sub-blocks, there are many blocks but the results are stored relatively to the surrounding blocks and therefore require fewer bits.
+* if required, sub-blocks can be splitted even further. They may then be small enough for their results to fit into a full lookup-table. 
+
+
 ## Randomized Algorithms
 
 * Among others, randomized algorithms help to improve robustness concerning worst-case inputs (e.g., think of the pivot selection problem in `quicksort` when the sequence is provided by a malicious adversary).
