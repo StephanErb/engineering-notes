@@ -52,6 +52,11 @@ There seem to be some simple ideas that have influenced the design of many algor
     - Pipelined Prefix Sum (Paralag und Sanders Paper?)
     - All to all for irregular message sizes 
 
+* __K-Way approach__ instead of binary operations that are scattered over a deep recursion, perform a k-way operation. This limits the number of recursion levels and gives room for clever implementations of the (k-way) operation. Examples:
+    - An [External Memory Mergesort] performs less IOs due to the limit recursion depth. Its k-way merge function can be implemented efficiently with help of _tournament trees_.
+    - Samplesort generalizes over Quicksort. It can be parallelized more efficiently.
+
+
 ## Succinct Data Structures
 Succinct Data Structures are space efficient implementations of abstract data types (e.g., trees, bit sets) that still allow for efficient queries. 
 
