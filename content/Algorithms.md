@@ -75,6 +75,19 @@ A common implementation technique is to split the data structure / problem into 
 * Use random numbers with care. Treat them as a scarce resource.
 * In certain parallel setups, _expected_ bounds of randomized algorithms do no longer hold: Consider `n` processes that call operations with _expected_ runtime bounds and that have to be synchronized before and afterwards. The runtime will suffer whenever at least one of the processes hits an expensive case. 
 
+## Cache-Efficient & External Memory Algorithms
+
+Efficient algorithms become compute bound (i.e. more memory won't help).
+
+Iterating a linked list -> random access in emmory. Instead duplicate lists & sort by id, predecessor, successor id then scan those in parallel. Neighbors of i are in the other arrays at the same position. This is cache efficient and can enable parallelization.
+
+Incorporate locality directly into the algorithm:
+
+* access memory in a block-wise fashion
+* dismiss random access patterns in favor of scanning / streaming
+* as IO is expensive, the main memory becomes an important and scarce resource. The available memory should always be used completely and efficiently (there is a trade off with how much memory shall be used for buffering to enable faster IOs).
+
+Block size not a technology constant but a tradeoff of maximal wasted space per empty, buffered block and wasted space per block pointer.
 
 ## Parallel Algorithms
 Goal is to come up with a parallel algorithm that has an appropriate computation / communication ratio for the target architecture (e.g., more coarse grained for NORMA or NUMA systems than for SMP systems).
@@ -121,6 +134,14 @@ Always run your experiments on:
 * different architectures (e.g., current Intel, AMD, MIPS to cover both CISC and RISC architectures)
 * different types of inputs (e.g., uniformly distributed, skewed)
 
+Look for cache efficiency, branch miss-predictions equaly important (i.e. super scalar samplesort)...  
+
+
+
+
+### Common Low-Level Optimizations
+
+
 
 [Level Ancestor Queries]: http://cg.scs.carleton.ca/~morin/teaching/5408/refs/bf-c04.pdf
     (The Level Ancestor Problem simplified)
@@ -136,3 +157,5 @@ Always run your experiments on:
     (SICP: Building Abstractions with Data. Example: Representing Sets)
 [Super Scalar Sample Sort]: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.72.366&rep=rep1&type=pdf
     (A fast variant of Sample Sort for super scalar architectures)
+[External Memory Mergesort]: http://algo2.iti.kit.edu/dementiev/files/DS03.pdf
+    (Asynchronous Parallel Disk Sorting)
