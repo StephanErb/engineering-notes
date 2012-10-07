@@ -1,5 +1,21 @@
 # Algorithm & Data Structures Design Toolbox
 
+
+## Algorithm Engineering
+Performance depends on technological properties of machines like parallelism, data dependencies and memory hierarchies. These play a role even in lower order terms.
+
+Always run your experiments on:
+
+* different architectures (e.g., current Intel, AMD, MIPS to cover both CISC and RISC architectures)
+* different types of inputs (e.g., uniformly distributed, skewed)
+
+Look for cache efficiency, branch miss-predictions equaly important (i.e. super scalar samplesort)...  
+
+
+### Common Low-Level Optimizations
+TODO
+
+
 ## Data Structures
 Many applications just rely on dynamic list structures, hashmaps and sorting. This is fine in most cases. However, here are some observations:
 
@@ -18,6 +34,16 @@ A _trie_ is a special kind of edge labeled tree. If used over a collection of ke
 
 ### Suffix Arrays and Suffix Trees
 TODO once studied.
+
+### Succinct Data Structures
+Succinct Data Structures are space efficient implementations of abstract data types (e.g., trees, bit sets) that still allow for efficient queries. 
+
+A common implementation technique is to split the data structure / problem into blocks:
+
+* on the first block level, the blocks are few enough so that we can spend many bits for each pre-computed result per block
+* on the second block level which splits existing blocks into sub-blocks, there are many blocks but the results are stored relatively to the surrounding blocks and therefore require fewer bits.
+* if required, sub-blocks can be splitted even further. They may then be small enough for their results to fit into a full lookup-table.
+
 
 ## Recurring Design Ideas
 There seem to be some simple ideas that have influenced the design of many algorithms and data structures. This list is not authoritative (in particular w.r.t. to naming), it just lists some observations. The ideas seem to be heavily connected and seldomly used in isolation. 
@@ -57,14 +83,6 @@ There seem to be some simple ideas that have influenced the design of many algor
     - Samplesort generalizes over Quicksort. It can be parallelized more efficiently.
 
 
-## Succinct Data Structures
-Succinct Data Structures are space efficient implementations of abstract data types (e.g., trees, bit sets) that still allow for efficient queries. 
-
-A common implementation technique is to split the data structure / problem into blocks:
-
-* on the first block level, the blocks are few enough so that we can spend many bits for each pre-computed result per block
-* on the second block level which splits existing blocks into sub-blocks, there are many blocks but the results are stored relatively to the surrounding blocks and therefore require fewer bits.
-* if required, sub-blocks can be splitted even further. They may then be small enough for their results to fit into a full lookup-table. 
 
 
 ## Randomized Algorithms
@@ -104,8 +122,6 @@ A rough roadmap (see Foster):
     - Tree-shaped communication paths and pipelining can help to distribute data more quickly, so that all PEs can start working earlier.
     - Expose the parallelization from the beginning (e.g., don't spawn threads for the multiple recursive calls within a recursive algorithms such as quicksort)
 
-
-
 ### Functional Decomposition
 Inspect the different computation steps. Group them to components that can operate in parallel. Finally, inspect the data required by the different components. 
 
@@ -126,20 +142,9 @@ A partitioning of the data (applies to input, output or heavily used data struct
     - Prefix-sums / scan operations are commonly used to enumerate items on the different PEs. Knowing how many of these items exist in total and on each predecessor PE, the items can be distributed equally.
 
 
-## Algorithm Engineering
-Performance depends on technological properties of machines like parallelism, data dependencies and memory hierarchies. These play a role even in lower order terms.
-
-Always run your experiments on:
-
-* different architectures (e.g., current Intel, AMD, MIPS to cover both CISC and RISC architectures)
-* different types of inputs (e.g., uniformly distributed, skewed)
-
-Look for cache efficiency, branch miss-predictions equaly important (i.e. super scalar samplesort)...  
 
 
 
-
-### Common Low-Level Optimizations
 
 
 
