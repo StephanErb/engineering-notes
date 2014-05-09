@@ -4,6 +4,7 @@
 * The _absolut_ speedup over the best sequential competitor is what counts, not the arbitrary _relative_ speedup.
 * Watch out for sequential portions of the code. They may heavily limit the overall speedup, as can be shown by Amdahl's Law: $T(n) = T(1) \frac{1-a}{n} + a T(1)$ with $a$ being the fraction non-parallelized portion of the code. For $n \rightarrow \inf$ observe that the speedup is bound by $S(n) = \frac{1}{a}$.
 
+
 ## Layers of Parallelization
 Often one has to deal with more than one layer of parallelization. The common ones:
 
