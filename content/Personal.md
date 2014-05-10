@@ -25,6 +25,9 @@
 * Focus is like mana: It can be empty and recharges slowly.
 
 
+juging other by actions, just self by intentions
+
+
 
 
 [sivers2009kimo]: http://sivers.org/kimo
