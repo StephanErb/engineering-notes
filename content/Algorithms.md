@@ -206,6 +206,7 @@ Advantage of many external algorithms: You can tell exactly how much internal me
 ## Parallel Algorithms
 Goal is to come up with a parallel algorithm that has an appropriate ratio of computation to communication time for the designated target architecture (e.g., more coarse grained for NORMA or NUMA systems than for SMP systems). Don't forget to first tune your sequential reference algorithm; probably it is already fast enough.
 
+The _absolut_ speedup over the best sequential competitor is what counts, not the arbitrary _relative_ speedup.
 
 ### Parallele Maschinenmodelle
 
@@ -298,7 +299,7 @@ Formulars which are often required during algorithm analysis:
 * Stearling Approx
 * log. Gesetze
 * markov inequality
-* amdahls law
+* Watch out for sequential portions of the code. They may heavily limit the overall speedup, as can be shown by Amdahl's Law: $T(n) = T(1) \frac{1-a}{n} + a T(1)$ with $a$ being the fraction non-parallelized portion of the code. For $n \rightarrow \inf$ observe that the speedup is bound by $S(n) = \frac{1}{a}$.
 
 ## Fun Facts
 * Part of quicksorts speed can be attributed to the fact that for random input, only about every other element is moved on each level in the recursion, whereas binary mergesort moves all elements on each level.

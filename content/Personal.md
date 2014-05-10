@@ -6,7 +6,7 @@
 * _"Money is nothing more than neutral proof that you're adding value to people's lives. Making sure you're making money is just a way of making sure you're doing something of value to others."_ -- [Derek Sivers][sivers2008berklee]
 
 ## Thinking
-* Two of the most important executive functions are _cognitive flexibility_ and _cognitive self-control_. Cognitive flexibility is the ability to see alternative solutions to problems, to think outside the box, to negotiate unfamiliar situations. Cognitive self-control is the ability to inhibit an instinctive or habitual response and substitute a more effective, less obvious one. [howtothink]
+* Two of the most important executive functions are _cognitive flexibility_ and _cognitive self-control_. Cognitive flexibility is the ability to see alternative solutions to problems, to think outside the box, to negotiate unfamiliar situations. Cognitive self-control is the ability to inhibit an instinctive or habitual response and substitute a more effective, less obvious one. [howtothink]. You need both
 
 ## Studying
 * Approach study tasks like you approach programming tasks (see the common principles)
@@ -17,12 +17,14 @@
 * If stuck with anything, ask yourself _what exactly_ is it, that you don't understand? (See the notes on debugging).
 * It's uncomfortable to focus so intensely on what you’re bad at.  If you really want to get better at something, you have to figure out what you’re doing wrong. [howtothink]
 
+## Teaching
+* Challenge the student by constantly asking questions. Let the student prove they got it. Set a high pace.
+
 ## Stress & Burnout Prehab
 * Stress kills creativity and gives you a bad hangover. Don't get back to work just because you are bored. Once your creativity returns (with ideas on cool projects, the strong desire to read one the countless unread books on your shelf, people you really want to meet again, ...) you will feel more energetic than ever and can re-approach your life (and work) with a whole new mind.
 * Focus is like mana: It can be empty and recharges slowly.
 
-## Mentoring & Teaching
-* Challenge the student by constantly asking questions. Let the student prove they got it. Set a high pace.
+
 
 
 [sivers2009kimo]: http://sivers.org/kimo
