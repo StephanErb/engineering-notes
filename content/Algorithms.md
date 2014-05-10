@@ -3,30 +3,33 @@
 Its about finding the right data structure and accompaning algorithm for the job. Generally, this depends on the number of elements involved in the computation (e.g., _internal memory_ vs _external memory algorithms_, _van Emde Boas Trees_ vs _[Fusion Trees]_, ...).
 
 
+
+
 ## Algorithm Engineering
 
 Performance depends on technological properties of machines like parallelism, data dependencies and memory hierarchies. These play a role even in lower order terms.
-
 
 General approach:
 
 1. Inspect all existing asymptotically optimal algorithms
 2. Choose the the simplest one.
-3. Start to optimize it.
+3. Implement your algorithm targeting a suitable machine model.
+4. Start to optimize it. Be aware, these optimizations are meant to be driven by theory and not just bit-level tricks.
 
     - identify and eliminate computations which are not required in all cases (excessive work)
     - optimize memory access patterns
     - eliminate branch miss-predictions (e.g., see _[Quicksort Branch Misspredictions]_)
     - ...
 
-    These optimizations are meant to be driven by theory and not just bit-level tricks.
-4. Always run your experiments on:
+5. Run your experiments on:
 
     - different architectures (e.g., current Intel, AMD, MIPS) to cover both CISC and RISC architectures
     - different types of inputs (e.g., uniformly distributed, skewed)
     - highly tuned competitors codes (i.e., how do you compare two medicore implementations?)
 
-5. Repeat
+6. Repeat
+
+
 
 
 ## Data Structures
@@ -43,34 +46,39 @@ Many applications just rely on dynamic list structures, hashmaps and sorting. Th
     - When the number of elements that the list shall hold is (roughly) known but elements can only be inserted one by one, correctly initialize the list in order to avoid the numerous internal array copies.
 
 
-### Trees / Tries
 
-A _trie_ is a special kind of edge labeled tree. If used over a collection of keys, it can be used to find the significant difference between these keys (i.e., the _important bit positions_ sufficient to distinguish all keys). Examples:
-
-* _[Fusion Trees]_ compress keys within _B-Tree_ nodes by reducing them to the bits at the important bit positions required to distinguish the keys. All keys of a node can then be fused into a single machine word and compared to a query element in parallel using a single bitparallel subtraction.
-* _[String B-Trees]_ use _Patricia Tries_ (aka _radix tries_ or _compact prefix_ trees) to identify the subset of characters relevant for the comparison of a string pattern to the keys of a _B-Tree_. Knowing these characters and the lengths of the common prefixes of keys,  the number of required I/Os per traversal can be limited.
-* _[Signature Sort]_ splits keys into chunks and compresses these chunks using a hash function. A trie is then used to filter the chunks that are not relevant for the sort order of the keys. The keys therefore become smaller and sorting them becomes easier.
+### Trees and Tries
 
 Trees can be constructed in $\mathcal{O}(n)$ if their elements are inserted in the order of their leafs. Starting from the last that has been inserted, one has to move up until the edge / node is found where the new node shall be added. As we only operate on the right-most path, the runtime follows by a simple amortized argument. Examples:
 
 * Deriving _Suffix Trees_ from _Suffix_ & _LCP Arrays_
 * Constructing _Cartesian Trees_ (heap-ordered binary trees for which a symmetric (in-order) traversal returns the original integer sequence)
 
+A _trie_ is a special kind of edge labeled tree. If used over a collection of keys, it can be used to find the significant difference between these keys (i.e., the _important positions_ sufficient to distinguish all keys). Examples:
+
+* _[Fusion Trees]_ compress keys within _B-Tree_ nodes by reducing them to the bits at the important bit positions required to distinguish the keys. All keys of a node can then be fused into a single machine word and compared to a query element in parallel using a single bitparallel subtraction.
+* _[String B-Trees]_ use _Patricia Tries_ (aka _radix tries_ or _compact prefix_ trees) to identify the subset of characters relevant for the comparison of a string pattern to the keys of a _B-Tree_. Knowing these characters and the lengths of the common prefixes of keys, the number of required I/Os per traversal can be limited.
+* _[Signature Sort]_ splits keys into chunks and compresses these chunks using a hash function. A trie is then used to filter the chunks that are not relevant for the sort order of the keys. The keys therefore become smaller and sorting them becomes easier.
+
+
 
 ### Suffix Arrays and Suffix Trees
 
 Suffix trees are very powerful, i.e., the _repeat problem_ (the pattern mining problem to find all maximal strings that are repeated more than once within the document) can be solved very easily on suffix trees.
 
-The longer the LCP of two suffixes, the closer those are placed to each other within the suffix array. This grouping / locality information is used in various ways. Examples
+The longer the LCP (longest common prefix) of two suffixes, the closer those are placed to each other within the suffix array. This grouping / locality information is used in various ways. Examples:
+
 * during pattern matching
 * finding the longest previous substring for computing the LZ77 factorization. Only inspect the suffix in close proximity that stand refer to a previous text position --> previous and next smaller values.
 
 
+
 ### Succinct Data Structures
-Succinct Data Structures are space efficient implementations of abstract data types (e.g., trees, bit sets) that still allow for efficient queries without having to unpack it first. Everything is accessed in-place, by reading bits at various positions in the data. To achieve optimal encoding, we use bits instead of bytes. All of our structures are encoded as a series of 0's and 1's.
+
+Succinct Data Structures are space efficient implementations of abstract data types (e.g., trees, bit sets) that still allow for efficient queries without having to unpack/decompress the data structure first. Everything is accessed in-place, by reading bits at various positions in the data. To achieve optimal encoding, we use bits instead of bytes. All of our structures are encoded as a series of 0's and 1's.
 
 Common / usefull operations:
-* __ranke__ large universe with gaps -> small universe (think of perfect hashing for integers)
+* __rank__ large universe with gaps -> small universe (think of perfect hashing for integers)
 * __select__
 
 A common implementation technique is to split the data structure / problem into blocks:
@@ -89,58 +97,73 @@ A common implementation technique is to split the data structure / problem into 
 * _2D Min Heaps_
 * _RMQ & LCA_
 
+
+
+
 ## Recurring Design Ideas
+
 There seem to be some simple ideas that have influenced the design of many algorithms and data structures. This list is not authoritative (in particular w.r.t. to naming), it just lists some observations. The ideas seem to be heavily connected and seldomly used in isolation.
 
 * __Tradeoff:__ Inspect simple, naive solutions with contradicting space and runtime bounds (e.g, online computation vs. precomputation of all results) and try to find a tradeoff that achieves the best of both worlds. So for example, instead of precoumputing all results, precompute just a particular subset. Examples:
+
     - [Level Ancestor Queries][] (to find the tree-ancestor on a particular level) can be approached using _jump pointers_ and _ladder decomposition_, which both precompute a subset of all potential queries and run in $\mathcal{O}(\log n)$ time. However, a combination of both leads to constant query time and a linear space requirement, thus heavily improving over the computation of all results.
 
 * __Combination:__ Combine several (different) data structures so that expensive operations of one data structure can be improved using a specialized data structure for this particular sub-problem. Examples:
+
     - _[String B-Trees]_ build _Patricia Tries_ on top of individual B-Tree nodes to improve over the binary search to find the insertion point within the keys of a node.
     - _[Priority Queues for Cached Memory]_ use a priority queue in internal memory that buffers elements so that the expensive write operations to the external memory can be performed in batches.
 
 * __Indirection/Bucketing:__ Instead of working on a large problem set (with larger accompanying space & runtime bounds), first find a suitable bucket and then solve the problem only within this particular bucket. Examples:
+
     - _Perfect Hashing_ uses an indirection so that it is not required to find a perfect (injective) hash function for all elements, but only for the elements within the same collision bucket. This reduces the overall space requirement while retaining the expected construction and query time.
     - _Y-Fast Tries_ improve upon the space requirements of _X-Fast Tries_ by building the trie over representatives of buckets instead of over all elements. The buckets are implemented as balanced binary trees and do not just reduce the space requirement of _X-Fast Tries_ but also help to reduce update costs using amortization.
     - _Range Minimum Queries_ as implemented by [Fischer and Heun][Range Minimum Queries] use a data structure that normally requires $n \log n$ words but only insert a subset of elements so that they can reduce the space requirements to $\mathcal{O}(n)$.
     - _Succinct Data Structures_ can profit from indirection layers as they reduce the number of elements that have to be distinguished from the whole universe down to all elements within a bucket. Thus, to distinguish these elements fewer bits are required.
 
-* __Decomposition:__ Instead of dealing with elements of objects as a whole, split them into logical subparts. Exploit this inner structure to achieve higher efficiency and eventually solve the problem within a richer model of computation (e.g., compare bits instead of whole integers) . Examples:
+* __Decomposition:__ Instead of dealing with elements of objects as a whole, split them into logical subparts. Exploit this inner structure to achieve higher efficiency and eventually solve the problem within a richer model of computation (e.g., compare bits instead of whole integers). Examples:
+
     - _X-Fast Tries_ split integer keys into their common prefixes and use a binary search to find the longest common prefix.
     - _van Emde Boas Trees_ recursively split keys into a top and bottom halve in order to efficiently navigate within buckets and summaries over these buckets.
-    - [Level Ancestor Queries] can be implemented via the idea of recursively splitting a tree into its longests paths (_longest path decomposition_) and precomputing the results within these paths.
+    - _[Level Ancestor Queries]_ can be implemented via the idea of recursively splitting a tree into its longests paths (_longest path decomposition_) and precomputing the results within these paths.
 
 * __Input Reduction/Simplification:__ Reduce the problem set at hand until it is simple enough so that it can be solved using basic means (e.g., another algorithm). This idea is at the core of most recursive algorithms.
-    - _Independet-Set Removal_ is used to speed up list ranking.
+
+    - _Independet-Set Removal_ is used to speed up list ranking by removing elements form the list until the list is small enough to be ranked easily.
     - _Signature Sort_ recursively reduces the size of the keys until they can be sorted with _Packed Sorting_.
     - The _findclose_ operation on _Succinct Trees_ finds the position of a closing bracket within the bitstring representing the tree. The idea is to solve the problem for a corresponding, so-called pioneer and then deduce the actual closing position from the closing position of the corresponding pioneer.
 
 * __Broadword Computing:__ Fuse data elements into machine words and run operation on then in parallel, instead of sequentially. You can get more done within fewer instructions and without having to hit memory.
+
     - _[Fusion Trees]_ compare several integer keys with a single bitparallel computation.
     - _Packed Sorting_ is a variant of mergesort that packs several short integer keys into a machine word. It then uses bitparallel computations to speed up the base case and the merge of sorted words. In particular, it relies on a bitparallel version of _Bitonic Sorting_.
 
-* __Two Phase Computation:__ If something is complicated (and thus slow) to do in a single pass, feel free to use several phases. Two pass approach: Can remove dependencies within subsequent iterations of a loop and therefore enable sotware piplining (overlapping loop iterations -> out of order execution). Examples:
+* __N-Phase Computation:__ If something is complicated (and thus slow) to do in a single pass, feel free to use several phases. A multi pass approach can remove dependencies within subsequent iterations of a loop and therefore enable sotware piplining (overlapping loop iterations -> out of order execution). Examples:
     - _[Super Scalar Sample Sort]_ sorts in two phases. In the first pass it is only decides in which bucket an element shall be assigned to. The actual data movement into the preallocated subarrays is then performed in the second pass once the total bucket sizes are known.
     - Pipelined Prefix Sum (Paralag und Sanders Paper?)
     - All to all for irregular message sizes
 
 * __K-Way approach:__ Instead of binary operations that are scattered over a deep recursion, perform a k-way operation. This limits the number of recursion levels and gives room for clever implementations of the (k-way) operation. Examples:
-    - An [External Memory Mergesort] performs less IOs due to the limit recursion depth. Its k-way merge function can be implemented efficiently with help of _tournament trees_.
+
+    - An [External Memory Mergesort] performs less IOs due to the limited recursion depth. Its k-way merge function can be implemented efficiently with help of _tournament trees_.
     - Samplesort generalizes over Quicksort by recursively sorting $K$ partitions. It can be parallelized more efficiently.
 
-* __Batch Processing:__ E.g. order the data to be added than use this information to perform the insertion clever. Tree construction, pareto queue, external memory section on batching, Idee der Pre-Buffer Datenstruktur: In kleine Datenstruktur einfügen, dann irgendwann flush in eine Große als vorbereitete Batch-Op (e.g., External PrioQues mit interner und großer externer PQ.
+* __Batch Processing:__ Grouping individual operations to a batch of operations can have various advantages.
 
-Idee der Pre-Buffer Datenstruktur: In kleine Datenstruktur einfügen, dann irgendwann flush in eine Große als vorbereitete Batch-Op (e.g., External PrioQues mit interner und großer externer PQ
+    - When latencies are an issue, batching can be used to amortize the latency over a number of buffered element. Examples:
+        + _[Priority Queues for Cached Memory]_ use a priority queue in internal memory that buffers elements so that the expensive write operations to the external memory can be performed in batches
+    - Pre-processing (such as sorting) of the buffered elements can sometimes be used to generate additional information speeding up the batch operation. Examples:
+        + Constructing or update of a tree by inserting elements in sorted order, i.e., a form of _finger search_.
+    - Processing elements in batches can allow us paralleize the operation, something which would not e feasible for individual elements.
+        + The parallel _Pareto Search_ algorithms processes batch of lables instead of individual labels as in classic label setting algorithms. All its operations can be parallelized
 
-- _[Priority Queues for Cached Memory]_ use a priority queue in internal memory that buffers elements so that the expensive write operations to the external memory can be performed in batches.
 
-nodaris independent set stuff.
+
 
 ## Common Low-Level Optimizations
 
 A common rule is that the less instructions are issued, the faster runs an algorithm. Sophisticated checks for special cases are therefore not always worth it.
 
-* __Tail Call Optimization:__  Two recursive calls: One can be replaced with while loop (by making the recursion end if a loop). Only suitable of the work done by a recursive call is potentially small. (--> tail call optimization)
+* __Tail Call Optimization:__  Two recursive calls: One can be replaced with a while loop (by making the recursion-end the loop condition). Only suitable of the work done by a recursive call is potentially small. (--> tail call optimization)
 
 * __Sentinals:__ Special elements that added to the data (e.g., beginning and end of list) and remove the need for special case handling. Instead of several only one loop condition has to be checked, simplifying and thus improving the performance of the code.  use sentinals to limit actual comparisions for boundary cases (e.g., quicksort inner loop, dummy element in lists: cycluar)
 
@@ -157,6 +180,13 @@ A common rule is that the less instructions are issued, the faster runs an algor
 * __Required Register Count:__ The close the number of required registers is to the actual available register count the better. Mind that when setting tuning paramets (e.g., the _k_ in _[k-way algorithms](#recurring-design-ideas)_).
 
 For memory efficency, see [here](#cache-efficient-and-external-memory-algorithms). Mind that depending on the hardware and the algorithm either branches or memory access can be the limiting factor.
+
+
+
+* If the compiler is bad, consider loop unrolling / software pipelining to expose the concurrent instructions to the CPU so that they can be executed in parallel.
+
+* For simplificiation, just assume that the branch-predictor will predict the branch that was taken _the last time_. When designing algorithms, try to void hard-to-predict branches (e.g., the comparison-if in a simple _quicksort_). If possible, convert these convert these control-dependencies to data-dependencies. Using predicated instructions these are then easier/faster to execute because there is no need to flush the pipeline. Examples:
+    - [Super Scalar Sample Sort] with the algorithmic insight that element comparisons can be decoupled from expensive conditional branching.
 
 
 ## Randomized Algorithms
