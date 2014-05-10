@@ -161,32 +161,26 @@ There seem to be some simple ideas that have influenced the design of many algor
 
 ## Common Low-Level Optimizations
 
-A common rule is that the less instructions are issued, the faster runs an algorithm. Sophisticated checks for special cases are therefore not always worth it.
+A common rule is that the less instructions are issued, the faster runs an algorithm. Sophisticated checks for special cases are therefore not always worth it. Also mind that depending on the hardware and the algorithm either branches or memory access can be the limiting factor.
 
-* __Tail Call Optimization:__  Two recursive calls: One can be replaced with a while loop (by making the recursion-end the loop condition). Only suitable of the work done by a recursive call is potentially small. (--> tail call optimization)
+* __Tail Call Optimization:__  Given an algorithm with two recursive calls (e.g., quicksort), one call can be replaced with a while loop, by making the recursion-end the loop condition. To limit the recursion depth, the larger call should be handled in the while loop.
 
-* __Sentinals:__ Special elements that added to the data (e.g., beginning and end of list) and remove the need for special case handling. Instead of several only one loop condition has to be checked, simplifying and thus improving the performance of the code.  use sentinals to limit actual comparisions for boundary cases (e.g., quicksort inner loop, dummy element in lists: cycluar)
+* __Sentinals:__  Sentinals are algorithm-specific elements added to the managed data in order to simplify and ensure that certain invariants hold. They are commonly used to limit comparisions for boundary cases. For example:
 
-* __Hard to Predict Branches:__ Conditional branches within loops may be hard to predict because both branches may be both likely to be taken. The branch predictor will fail often enough for the performance to suffer greatly. Mind that end-of-loop conditions are easy to predict. A missprediction only happens when the loop is exited. Some branches cannot be predicted, because they always produce valuable information (e.g., quicksort pivot comparison). Predictor off in 50% of the cases. Nicht unbedingt die Anzahl Branches wichtig, sondern die Anzahl der schwer vorhersagbaren Branches zählt!
+    - When implementing a linked list, we have to deal with the list beginning and list end as a special case. We can remove this special case by making the list circular and beginning/ending in a special sentinal element. We can now add an element after the last element or before the first element without any special checks for dangling pointers. The sentinal also helps with search: Just store the element you are looking for in the sentinal, you can now search the entire list for without having to check if the list end is reached. The list end if found naturally if the element is not in the list.
 
+* __Hard to Predict Branches:__ It's the number of hard to predict branches that matters. Conditional branches within loops may be hard to predict, because the comparision produces valuable information and both branches may be both likely to be taken (e.g., quicksort pivot comparision). The branch predictor will fail often enough for the performance to suffer greatly. Mind that end-of-loop conditions are easy to predict, as a missprediction only happens when the loop is exited. Workarounds for hard to predict branches:
 
     - _[Super Scalar Sample Sort]_ mitigates the hard to predict conditional branches of _quicksort_ by using a _two phase computation_ approach where comparisions for neighboring elements are independet from each other. These comparisons can then be executed (in parallel) as _[predicated instructions](http://en.wikipedia.org/wiki/Branch_predication)_ which do not trigger branch miss predictions and expensive pipeline flushes.
-    - Mitigating branches requires to _translate control to data dependencies:_ `cmp` operations (or the equivilant substractions) return 0 and 1. Instead as a branch condition these can be used with index computations of _[implicit data structures](http://en.wikipedia.org/wiki/Implicit_data_structure)_. For example, this works in _binary heaps_ embedded into arrays and in the implicit search tree of _[Super Scalar Sample Sort]_.
+    - _Translate control to data dependencies_ to mitigate the need for branches: `cmp` operations (or the equivilant substractions) return 0 and 1. Instead as a branch condition these can be used with index computations of _[implicit data structures](http://en.wikipedia.org/wiki/Implicit_data_structure)_. For example, this works in _binary heaps_ embedded into arrays and in the implicit search tree of _[Super Scalar Sample Sort]_.
 
-* __Data-dependencies:__ Try to limit or defer unneeded data dependencies by following a (two-pass approach)[#recurring-esign-ideas]. Less data-dependencies make it easier to fully exploit the super scalar instruction units of modern CPUs (e.g., see _[Super Scalar Sample Sort]_).
+* __Data-dependencies:__ Try to limit or defer unneeded data dependencies by following a (two-pass approach)[#recurring-esign-ideas]. Less data-dependencies make it easier to fully exploit the super scalar instruction units of modern CPUs (e.g., see _[Super Scalar Sample Sort]_). Loop unrolling / software pipelining may then be used to expose the concurrent instructions to the CPU so that they can be executed in parallel.
 
 * __Early Recursion End:__ If the data set is small then algorithms with better asymptotic behaviour but better constant factors can become faster (e.g., quicksort implementations fall back to insertion sort)
 
 * __Required Register Count:__ The close the number of required registers is to the actual available register count the better. Mind that when setting tuning paramets (e.g., the _k_ in _[k-way algorithms](#recurring-design-ideas)_).
 
-For memory efficency, see [here](#cache-efficient-and-external-memory-algorithms). Mind that depending on the hardware and the algorithm either branches or memory access can be the limiting factor.
 
-
-
-* If the compiler is bad, consider loop unrolling / software pipelining to expose the concurrent instructions to the CPU so that they can be executed in parallel.
-
-* For simplificiation, just assume that the branch-predictor will predict the branch that was taken _the last time_. When designing algorithms, try to void hard-to-predict branches (e.g., the comparison-if in a simple _quicksort_). If possible, convert these convert these control-dependencies to data-dependencies. Using predicated instructions these are then easier/faster to execute because there is no need to flush the pipeline. Examples:
-    - [Super Scalar Sample Sort] with the algorithmic insight that element comparisons can be decoupled from expensive conditional branching.
 
 
 ## Randomized Algorithms
@@ -195,13 +189,14 @@ For memory efficency, see [here](#cache-efficient-and-external-memory-algorithms
 * Allowing randomized algorithms to compute a _wrong_ result (with a very low probability) can open many new possibilities concerning speed, space, quality and ease of implementation (e.g., think of _bloom filters_ or _[Approximate Distance Oracles]_).
 * Never use the `C` `rand()` function. If in doubt, use _Mersenne Twister_.
 * Use random numbers with care. Treat them as a scarce resource.
-* In certain parallel setups, _expected_ bounds of randomized algorithms do no longer hold: Consider `n` processes that call operations with _expected_ runtime bounds and that have to be synchronized before and afterwards. The runtime will suffer whenever at least one of the processes hits an expensive case.
+* In certain parallel setups, _expected_ bounds of randomized algorithms do no longer hold: Consider `n` processes that have to be synchronized before and after a call of an operation with _expected_ runtime bounds. The runtime will suffer whenever at least one of the processes hits an expensive case. The same problems applies to algorithms with _amortized_ bounds.
+
 
 
 
 ## Cache-Efficient and External Memory Algorithms
 
-cpu cycles are orders of magnitudes faster than memory accesses. The cost of a memory access depends on the level of the memory hierarhcy that serves a request.
+cpu cycles are orders of magnitudes faster than memory accesses. The cost of a memory access depends on the level of the memory hierarhcy that serves the request.
 
 Efficient algorithms become compute bound (i.e. more memory won't help).
 
@@ -222,15 +217,12 @@ Approaches:
 * TODO: algo eng ZF has many more (goldene regeln)
 
 Processor cache effects:
-* L1, L2 cache sizes
-* Instruction level parallelism
-* Cache associativity (direct, n-way, fully)
+* cache sizes and cache associativity (direct, n-way, fully)
 * False cache line sharing
 
-
-SPLIT the two topics. It is not exactly the same...
-
 Advantage of many external algorithms: You can tell exactly how much internal memory you want to use.
+
+
 
 
 ## Parallel Algorithms
