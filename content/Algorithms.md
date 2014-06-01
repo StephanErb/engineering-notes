@@ -183,6 +183,7 @@ A common rule is that the less instructions are issued, the faster runs an algor
 
 
 
+
 ## Randomized Algorithms
 
 * Among others, randomized algorithms help to improve robustness concerning worst-case inputs (e.g., think of the pivot selection problem in `quicksort` when the sequence is provided by a malicious adversary).
@@ -190,6 +191,7 @@ A common rule is that the less instructions are issued, the faster runs an algor
 * Never use the `C` `rand()` function. If in doubt, use _Mersenne Twister_.
 * Use random numbers with care. Treat them as a scarce resource.
 * In certain parallel setups, _expected_ bounds of randomized algorithms do no longer hold: Consider `n` processes that have to be synchronized before and after a call of an operation with _expected_ runtime bounds. The runtime will suffer whenever at least one of the processes hits an expensive case. The same problems applies to algorithms with _amortized_ bounds.
+
 
 
 
@@ -208,8 +210,9 @@ A common rule is that the less instructions are issued, the faster runs an algor
 
 * Approaches:
 
-  - _Recursive divide'n'conquer:_ For example a recursive binary heap construction is more cache efficienz than the iterative one, as memory accesses are limited to a smaller region
-  - _List neighborhood operations:_ Given a linked list we might want to perform an operation for each node with the predecessor and successor as input. Accessing the latter directly would result in random memory accesses. Instead: Duplicate the list two more times. Sort one by ID, one by predecessor ID, one by successor ID. Neighbors of node at position i are now in the other arrays at the same position i.  Neighborhood operations are now cache efficient and can be parallelized.
+    - _Recursive divide'n'conquer:_ For example a recursive binary heap construction is more cache efficienz than the iterative one, as memory accesses are limited to a smaller region
+    - _List neighborhood operations:_ Given a linked list we might want to perform an operation for each node with the predecessor and successor as input. Accessing the latter directly would result in random memory accesses. Instead: Duplicate the list two more times. Sort one by ID, one by predecessor ID, one by successor ID. Neighbors of node at position i are now in the other arrays at the same position i.  Neighborhood operations are now cache efficient and can be parallelized.
+
 
 
 
@@ -219,6 +222,8 @@ Goal is to come up with a parallel algorithm that has an appropriate ratio of co
 
 The _absolut_ speedup over the best sequential competitor is what counts, not the arbitrary _relative_ speedup.
 
+
+
 ### Parallele Maschinenmodelle
 
 * PRAM: parallele Version des RAM/von Neumann Modell
@@ -227,43 +232,34 @@ The _absolut_ speedup over the best sequential competitor is what counts, not th
 Many computations can be represented as DAGs. Can easily be computed on PRAMs by computing layer _i_ in phase _i_. A computation on a distributed machine is possible just as well.
 
 
+
 ### Basic Toolbox
-Most parallel algorithms are based on a set of recurring primitives
 
-* Assoziative Operationens (reduce, e.g., +, max, min)
-* Broadcast
-* Gather, scatter
-* All-to-all personalized communication
+Most parallel algorithms are based on a set of recurring primitives:
+
 * Sorting
-* Kollektive Kommunikation
-* Gossiping ( = All-Gather = Gather + Broadcast)
-* Combinations such as all-reduce or all-gather where all participating PEs get the whole result
-* Recursive algorithms
-   - Algorithmus ist “malleable”, d.h. dynamisch an den jeweils
-verfügbaren Parallelismus anpassbar
-   - Gut für task parallele shared memory Systeme
-(z.B. Cilk, Intel TBB)
-   - Anpassbar an hierarchisch aufgebaute Systeme
-* Selection & multisequence selection
+* Collective communication:
+    - broadcast
+    - gather / scatter
+    - all-to-all personalized communication
+    - reduce using associative operations (+, max, min)
+    - combinations such as all-reduce or all-gather (gossiping) where all participating PEs get the whole result
+    - prefix-sum computations (scan)
+* Selection and multisequence selection (e.g., a form of quickselect)
 
-* Leverage trees over PEs to achive logarithmic communication paths and execution times (e.g., binary, binominal, fibonacci, ...)
 
-* Long paths (e.g., linked-lists, long paths within trees) are difficult to parallelize. Sorting the nodes of a path (e.g., via _list ranking_ based on _doubling_ and _independent set removal_) and storing them in an array, enables parallelization. Every PE can then operate on a particular index-range on the array.
+Besides the primitives there are several design approaches seen rather often:
 
-* Load balancing is important and therefore at the core of many parallel algorithms. Some examples:
+* _Tree-shaped computations:_ Trees spanning the PEs to achive logarithmic communication paths and execution times (e.g., binary, binominal, fibonacci, ...)
+* _Pipelining:_ It can help to distribute data more quickly, so that all PEs can start working earlier
+* _Load balancing:_ Found at the core of many parallel algorithms. Some examples:
+    - Prefix-sums / scan operations are commonly used to enumerate items on the different PEs. Knowing how many of these items exist in total and on each predecessor PE, the items can be distributed equally (e.g., distributed quicksort)
     - Sample sort uses _sampling_ to find splitters that split up the data in (hopefully) equally sized chunks. Each PE is then responsible to sort one of these chunks.
-    - Prefix-sums / scan operations are commonly used to enumerate items on the different PEs. Knowing how many of these items exist in total and on each predecessor PE, the items can be distributed equally.
-
-
-* Obviously, PEs should never idle. This implies several things:
-
-    - Tree-shaped communication paths and pipelining can help to distribute data more quickly, so that all PEs can start working earlier. This leads to logarithmic intead of linear time complexity.
-    - Expose the parallelization from the beginning (e.g., don't spawn threads for the multiple recursive calls within a recursive algorithms such as quicksort)
-
-
-* adapting data structures to remove multiple elements at a time, instead of just a single one. Operations are performed by all PEs simultanously / in parallel instead of just concurrently.
-    - Pareto Queue
+* _Batching:_ Data structures designed to operation on multiple elements at a time, instead of just a single one. Operations are performed by all PEs simultanously in a cooperative maner  instead of just _concurrently_ (eventually protected by locks).
+    - The Pareto Queue
     - Best first Branch-and-bound with PE local priority queues
+* _Recursion:_ A malleable approach adapting to the available parallelism. However, mind that we often want to expose much parallelism from the beginning (e.g., don't spawn threads for the multiple recursive calls within a recursive algorithms such as quicksort)
+* _'Array-ification':_ Long paths (e.g., linked-lists, long paths within trees) are difficult to parallelize. Sorting the nodes of a path (e.g., via _list ranking_ based on _doubling_ and _independent set removal_) and storing them in an array, enables parallelization. Every PE can then operate on a particular index-range on the array.
 
 
 
@@ -298,6 +294,8 @@ verfügbaren Parallelismus anpassbar
 
 
 
+
+
 ## Useful Formulars
 
 TODO. Formulars which are often required during algorithm analysis:
@@ -310,8 +308,15 @@ TODO. Formulars which are often required during algorithm analysis:
 * markov inequality
 * Watch out for sequential portions of the code. They may heavily limit the overall speedup, as can be shown by Amdahl's Law: $T(n) = T(1) \frac{1-a}{n} + a T(1)$ with $a$ being the fraction non-parallelized portion of the code. For $n \rightarrow \inf$ observe that the speedup is bound by $S(n) = \frac{1}{a}$.
 
+
+
+
+
 ## Fun Facts
 * Part of quicksorts speed can be attributed to the fact that for random input, only about every other element is moved on each level in the recursion, whereas binary mergesort moves all elements on each level.
+
+
+
 
 
 [Level Ancestor Queries]: http://cg.scs.carleton.ca/~morin/teaching/5408/refs/bf-c04.pdf
