@@ -34,17 +34,17 @@ TODO: Wild guess: It is probably very useful to think about architectures as con
 
 
 * Key-Value Store / Object Store
-  - Associtavie array at the component level. The simplest form storage.
+    - Associtavie array at the component level. The simplest form storage.
 * Database management system (DBMS)
-  - relational
-  - object-oriented
-  - ...
+    - relational
+    - object-oriented
+    - ...
 * Message Queue
-  - Decoupling of message producers and consumsers (point-to-point, publish-and-subscribe)
-  - Examples: AMQP, ZeroMQ
+    - Decoupling of message producers and consumsers (point-to-point, publish-and-subscribe)
+    - Examples: AMQP, ZeroMQ
 * Task Queues
-  - Specialized message queue used to distribute work across threads or machines
-  - Master and workers are decoupled so that a flexible numbers of workers that can feed themselves
+    - Specialized message queue used to distribute work across threads or machines
+    - Master and workers are decoupled so that a flexible numbers of workers that can feed themselves
 
 
 

@@ -1,7 +1,10 @@
+
+------
+
+------
+
+
 # Stuff to look at
-
-
-----------------
 
 ## Sources to review
 * Study notes
@@ -66,11 +69,3 @@
   - list of useful diagrams and when to use them (dfd, Feature, fmc,...)?
 
 
-
------
-
-
-
-
-
------
