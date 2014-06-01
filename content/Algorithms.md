@@ -254,6 +254,7 @@ Besides the primitives there are several design approaches seen rather often:
 * _Pipelining:_ It can help to distribute data more quickly, so that all PEs can start working earlier
 * _Load balancing:_ Found at the core of many parallel algorithms. Some examples:
     - Prefix-sums / scan operations are commonly used to enumerate items on the different PEs. Knowing how many of these items exist in total and on each predecessor PE, the items can be distributed equally (e.g., distributed quicksort)
+    - Randomized work stealing used to evenly distribute (dynamic) work among PEs
     - Sample sort uses _sampling_ to find splitters that split up the data in (hopefully) equally sized chunks. Each PE is then responsible to sort one of these chunks.
 * _Batching:_ Data structures designed to operation on multiple elements at a time, instead of just a single one. Operations are performed by all PEs simultanously in a cooperative maner  instead of just _concurrently_ (eventually protected by locks).
     - The Pareto Queue
