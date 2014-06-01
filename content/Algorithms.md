@@ -91,11 +91,11 @@ A common implementation technique is to split the data structure / problem into 
 
 ### List of other nice Data Structures
 
-* __Union-find Data structure:__ Commonly used to find cycles and connected components within graphs.
-* _Wavelet Trees_
+* _Union-find Data structure:_ Commonly used to find cycles and connected components within graphs.
+* _Wavelet Trees:_ TODO
 * _Tournament Trees / Loser Trees_ for _k-way_-merging of large data sets (assuming a large _k_ such as 256)
-* _2D Min Heaps_
-* _RMQ & LCA_
+* _2D Min Heaps:_ TODO
+* _RMQ & LCA:_ TODO
 
 
 
@@ -277,7 +277,7 @@ verfügbaren Parallelismus anpassbar
 
 2. Partition the problem. Expose as much parallelism as possible by finding _all_ concurrent tasks. Use _Domain_ Decomposition or _Functional_ Decomposition as described below. You can even combine both techniques recursively.
 3. Understand the communication paths and the required data flow between tasks.
-4. Aim to reduce communication costs by merging some of the fine-grained tasks that have too many data-dependencies or by duplicating some of the computations whose results are required by many different tasks. Basically, in this phase you perform manual of graph clustering.
+4. Aim to reduce communication costs by merging some of the fine-grained tasks that have too many data-dependencies or by duplicating data or some of the computations whose results are required by many different tasks. Basically, in this phase you perform manual of graph clustering.
 5. Map the resulting tasks to the target architecture and its available PEs. Aim to reduce the overall execution time (i.e., maximizing processor utilization and minimizing communication costs) by allocating the tasks wisely. If required, add a (distributed) load-balancing mechanism.
 
 
@@ -298,11 +298,9 @@ verfügbaren Parallelismus anpassbar
 
 
 
-
-
 ## Useful Formulars
 
-Formulars which are often required during algorithm analysis:
+TODO. Formulars which are often required during algorithm analysis:
 
 * Gaus
 * Hn
