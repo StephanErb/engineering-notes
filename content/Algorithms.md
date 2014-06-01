@@ -196,31 +196,20 @@ A common rule is that the less instructions are issued, the faster runs an algor
 
 ## Cache-Efficient and External Memory Algorithms
 
-cpu cycles are orders of magnitudes faster than memory accesses. The cost of a memory access depends on the level of the memory hierarhcy that serves the request.
+* CPU cycles are [orders of magnitudes faster](https://gist.github.com/jboner/2841832) than memory accesses. The cost of a memory access depends on the level of the memory hierarhcy serving the request.
+* External algorithms are a way to exploit the [time-memory tradeoff](https://en.wikipedia.org/wiki/Space-time_tradeoff)
+* As IO is expensive, the internal memory becomes an important and scarce resource. It should always be used completely and efficiently. In many algorithms you can tell exactly how much internal memory you want to use. This is also useful in multi-user cluster environments.
+* There is a trade-off with how much memory shall be used for buffering of accesses to lower levels of the memory hierarchy. The buffer block size is not a technology constant but a tradeoff of wasted space per empty buffered block and wasted space per block pointer. (TODO probably this statement is slightly wrong as it presents two different concepts as one...)
+* Incorporate locality directly into the algorithm:
 
-Efficient algorithms become compute bound (i.e. more memory won't help).
+    - access memory in a block-wise fashion
+    - dismiss random access patterns in favor of scanning and streaming
+    - TODO: 'Goldene Regeln' of the Algo Eng ZF.
 
-Iterating a linked list -> random access in emmory. Instead duplicate lists & sort by id, predecessor, successor id then scan those in parallel. Neighbors of i are in the other arrays at the same position. This is cache efficient and can enable parallelization.
+* Approaches:
 
-Incorporate locality directly into the algorithm:
-
-* access memory in a block-wise fashion
-* dismiss random access patterns in favor of scanning / streaming
-* as IO is expensive, the main memory becomes an important and scarce resource. The available memory should always be used completely and efficiently (there is a trade off with how much memory shall be used for buffering (i.e., blocks and the pointers to them) to enable faster IOs).
-
-Block size not a technology constant but a tradeoff of maximal wasted space per empty, buffered block and wasted space per block pointer.
-
-Approaches:
-
-* Recursive divide'n'conquer. E.g., recursive binary heap construction is more cache efficienz thatn the iterative one
-* neighbor hood ops via duplicated sort of pred /succ then simple scan.
-* TODO: algo eng ZF has many more (goldene regeln)
-
-Processor cache effects:
-* cache sizes and cache associativity (direct, n-way, fully)
-* False cache line sharing
-
-Advantage of many external algorithms: You can tell exactly how much internal memory you want to use.
+  - _Recursive divide'n'conquer:_ For example a recursive binary heap construction is more cache efficienz than the iterative one, as memory accesses are limited to a smaller region
+  - _List neighborhood operations:_ Given a linked list we might want to perform an operation for each node with the predecessor and successor as input. Accessing the latter directly would result in random memory accesses. Instead: Duplicate the list two more times. Sort one by ID, one by predecessor ID, one by successor ID. Neighbors of node at position i are now in the other arrays at the same position i.  Neighborhood operations are now cache efficient and can be parallelized.
 
 
 
