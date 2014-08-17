@@ -16,39 +16,6 @@
 
 
 
-
-## Sofware Architecture
-
-* Architecture is concerned with static structure, dynamic structure, deployment and system life-cycle
-* Architecture heavily influnces non-functional requirements: performance, securty, safety, availabaility, maintainability.
-
-
-### Component-based Architecture
-
-* A component is a contractly specified building block for software. It can be used by others without having to know anything about its interal structure.
-* Components are executable code. They can be deployed independently and easily. They don't have peristent state (somewhat unless you have attached persistent storage to the component)
-* Components are about interfaces and re-use, i.e., a compontent has a provided and a set of required interfaces.
-
-
-TODO: Wild guess: It is probably very useful to think about architectures as constellations of components. So let us try to distill what components are out there and what they are for. This is meant to help understanding the plethora of technologies hyped every day.
-
-
-* Key-Value Store / Object Store
-    - Associtavie array at the component level. The simplest form storage.
-* Database management system (DBMS)
-    - relational
-    - object-oriented
-    - ...
-* Message Queue
-    - Decoupling of message producers and consumsers (point-to-point, publish-and-subscribe)
-    - Examples: AMQP, ZeroMQ
-* Task Queues
-    - Specialized message queue used to distribute work across threads or machines
-    - Master and workers are decoupled so that a flexible numbers of workers that can feed themselves
-
-
-
-
 ## Software Design
 
 * Operating in a difficult domain (e.g., compilers, language workbenches, ...) does not mean software design is less important. You still need to talk about stuff like how to propagate errors, exception, livetime of objects, who is repsonsible for what... Once you broke down your problem into pieces, it won't be difficult any more and you can attack it.
