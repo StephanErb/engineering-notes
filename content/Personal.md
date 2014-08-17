@@ -26,7 +26,9 @@
 * Focus is like mana: It can be empty and recharges slowly.
 
 
-
+## Inter-personal
+* Encourage people to shine, even if this implies they might move on and leave you behind. Don't be afraid to loose them.
+* Your candle does not burn brighter if you try to diminish theirs.
 
 
 [sivers2009kimo]: http://sivers.org/kimo

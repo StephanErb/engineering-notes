@@ -34,6 +34,8 @@ General approach:
 
 ## Data Structures
 
+Good data structures reduce a big program to a smal program. Representation, and therefore data structures, is the essence for program writing. Let the data structure the program [Programming Pearls]
+
 Many applications just rely on dynamic list structures, hashmaps and sorting. This is fine in most cases. However, here are some observations:
 
 * _Orderness_ seems to be underutilized. Instead of storing elements without a particular order, consider keeping them sorted. This can help to [speed up operations][SICP on Sets] on them. So for example, instead of hashing and sorting, also consider an ordered associative array (e.g., Java's `SortedMap` or `NaviagableMap`).
@@ -147,7 +149,7 @@ There seem to be some simple ideas that have influenced the design of many algor
     - An [External Memory Mergesort] performs less IOs due to the limited recursion depth. Its k-way merge function can be implemented efficiently with help of _tournament trees_.
     - Samplesort generalizes over Quicksort by recursively sorting $K$ partitions. It can be parallelized more efficiently.
 
-* __Batch Processing:__ Grouping individual operations to a batch of operations can have various advantages.
+* __Batch Processing:__ Grouping individual operations to a batch of operations can have various advantages. To get think about elements to which the same things happens.
 
     - When latencies are an issue, batching can be used to amortize the latency over a number of buffered element. Examples:
         + _[Priority Queues for Cached Memory]_ use a priority queue in internal memory that buffers elements so that the expensive write operations to the external memory can be performed in batches
@@ -292,6 +294,8 @@ Besides the primitives there are several design approaches seen rather often:
     - Examples:
         + Often there is more than one obivous data partitioning. E.g., vs the cubed sub-matrix algorithm of Dekel Nassimi Sahni
     - Commonly used and formulated using the _Single Program Multiple Data (SPMD)_ principle. The  PE index is then used to break the inherint symmetrie
+    - Hints
+        + Perform data composition via chunks of fixed size instead of composition on a fixed number of chunks, i.e., use the chunk size to account for the parallelization overhead.
 
 
 

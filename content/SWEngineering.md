@@ -113,6 +113,7 @@ _"programming - playing Lego in a world without gravity"_
 
 ### Debugging
 * Again, think before you start. Relax, breath and fetch your favorite beverage. Find the bug in your head. Only then start the debugger, if at all.
+* First ask: 'What do I see? Where can I observe a problem? Once you have clarified this, ask 'Why?' until you found the problem.
 * Debugging is not a reason to stay overtime. Document your thought process so that you know where to pick up the next day.
 * If stuck, describe your problem to an (imaginary) colleague or your favorite rubber duck.
 * Dig until you have found the root cause. If you are inclined to just add a `null` check, then you haven't found it yet.
@@ -156,3 +157,10 @@ On a 1GHz CPU, with the reasonable assumption of 1 instruction per clock-cycle, 
 * _Spolsky's Law of Leaky Abstractions_
     - [All non-trivial abstractions, to some degree, are leaky](http://www.joelonsoftware.com/articles/LeakyAbstractions.html) (e.g., performance in SQL, reliability in the TCP/IP stack, garbage collection, distributed shared memory (NUMA))
     - Abstractions save us time working, but they don't save us time learning, because when (not if) leaks occure you need to know how to deal with them.
+
+* _Little's Law_
+    - The average number of things in a system is the product of the average rate of which things leave (or enter) the system and the average time each spends in the system.
+    - Can be used as a formula to compute properties of any queuing system (aka umstellen, einsetzen, freuen)
+
+* _Gordon Bell_
+    - The cheapest, fastest and most reliable components of a computer system are those that aren't there
