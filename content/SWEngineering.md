@@ -125,3 +125,14 @@ On a 1GHz CPU, with the reasonable assumption of 1 instruction per clock-cycle, 
 
 * _Gordon Bell_
     - The cheapest, fastest and most reliable components of a computer system are those that aren't there
+
+
+## Quotes
+
+* Martin Fowler in UML Distilled
+    - "One of my biggest irritations is how organizations consistently fail to learn from their own experience and end up making expensive mistakes time and time again."
+
+
+## People Traits (to learn?)
+
+* A.U. from SAP: Thinks through the entire life-cycle of an application or product and thereby spots many upcoming problems other people will only notice much later. 
