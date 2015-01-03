@@ -284,7 +284,7 @@ Besides the primitives there are several design approaches seen rather often:
 
     - Inspect the different computational steps. Group them to components that can operate in parallel. Finally, inspect the data required by the different components.
     - Functional decomposition yields modular program but which has often a limited scalability (i.e., the number of components is fixed and cannot increased easily)
-    - Examples: A pipeline is a special kind of functional decomposition.
+    - Examples: A pipeline is a special kind of functional decomposition (offering high throughput even in case of high latency)
 
 
 * __Data Parallelism / Domain Decomposition:__
