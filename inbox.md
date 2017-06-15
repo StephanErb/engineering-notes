@@ -91,9 +91,42 @@
     + Algorithms and Data Structures
     + Code Tuning
     + HW Specifica
+  - Software engineering is about separating the 'what' from the 'how'.
+  - Dict vs class: use class when you have an invariant to protect (e.g. you cannot change day and months separately as 31.02 will give an invalid date). Use freeform functions if there are no invariants to protect (e.g., change name + firstname independently).
+  - Software muss am Ende einer Story so aussehen wie als wäre es von Anfang an so gedacht. Nicht nur so aussehen weil das Feature zu einem bestimmten Zeitpunkt implementiert habe (e.g. weil dann klasse X schon da war und ich mein feature einfach dran flanschen konnte).
+ - End-To-End Principle in Systems Design: Don't implement stuff at lower-levels. You'll need to do it upper in the stack anyway. Low er level is only useful as a performance improvlemen. Also applicable to stuff like revision handling and maybe even immutability -> push it to the edges/upper layers. If their usecases are not covered they have to redo it anyway. http://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf 
+- No is temporary, Yes is forever. If you're not sure about a new feature, say no. You can change your mind later
+
+ 
+* Operations / Debugging:
+  - Finding a single root cause is not enough. If a problem 'escaped' or 'jumped' different layers, then you need a fix on all of them!
+  - most of the time you are debugging, most of this time you are looking for information, most of this time is spend becasue the system is unfamiliar. Consistent tool approach is helping here.
 
 * State
+  - If you need state, keep it separate. See out of the tar pit paper.
+  - there is essential (existential) state and non-essential state. Good example on when you have non-essential state: graph + job queue. You only need the graph and a function on the graph. the job queue itself is not necessary and only some unnecessary additional state. So, even though you got well-tested modules you don't have an ideal design.
   - to have reasonable maintainability persisted data needs an explicit schema. You pay only once for a schema / data migration. Without schema you probably suffer once and once again with special-casing in all consumers of the data
+  - external naming: don't enforce a user to remember a UUID for something he creates using ur API. He would need state to store it. Let him tell you the he name somehow, instead.
+  - separate state / storage from behaviour. In classes, call into freform function so there is no close state interaction. Leads to smaller classes and easier to test functions.
+  - data has mass. "trägheit" making it difficult to juggle it around. the more you have the more difficult it gets.
 
   Problem Definition, Algorithm Design, Data Structure Selection, Writing Correct Code.h
 
+
+* Standardization
+  - tighter iteration cycles ar eproductivity multipliers. Fast iterations ylield non-linear value incerase.
+  - When you have high marginal cost, people will not experiment
+  - standardized tooling has unexpected multiplicative effects
+
+* Europython take aways: domains abstractions matter, technology changes. Types matter at interface level
+
+
+* Testing
+  - Goal: give a non changing interface, I want to change the implementation of a class or any of the internal methos withoug having to change the test (no whitebox mocking).
+  - Mock objects tell you what you want to here. But what about the mocked interface? Is it still the same? Write tests to the interface. not to the implementation.
+  - Never write a mock for something you wrote. If you have to, the original design sucked. 
+  - Only mock the expensive stuff (not everything you could). 
+  - For mcoked stuff, have one well tested mock. Share it with users of your library/code. "Fakes": full felshed inmemory implementation of the thing you want to test.
+  - Don't test glue code. Test behaviourl interesting suuff. If you tested the extracted function, no need to test the instance method callig it...
+  - Don't write tests where there is no clear interface to test.
+  - Don't write a test that will slow you down when you come back with a better idea.
