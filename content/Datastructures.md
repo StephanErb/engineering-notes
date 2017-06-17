@@ -22,23 +22,34 @@ Many applications just rely on dynamic list structures, hashmaps, and sorting. T
 The data structures commonly seen in the wild (and tought in school) can be classified using a few abstract data types, i.e. a defined set of operations defined over a type, without knowing or relying on concrete implementation details:
 
 * Stacks and Qeueues (FIFO, LIFO, DEQUE)
+
   - powerful as limited operation subset provide a significant freedom for the implementation
   - common implementations rely on arrays, lists, ring buffers, and a combination of all of them.
+
 * Arrays (static, dynamic size)
+
   - the most important thing an array is providing is random access and space efficent storage
   - both are helpful for operations such as binary search
+
 * Lists (single linked, double linked)
+
   - somewhat a generalisation of stacks and queues as insert/delete are efficient anywhere and not just
     at the beginning and end.
+
 * Trees
+
   - essentially a 2D genralisation of linked list that provide us with O(log n) operations in case we
     ensure the tree does not degenerate back to a list.
   - it helps to think of a tree as a O(log n) navigation structure on top of a sorted sequence / list.
+
 * Graphs
+
   - generalisation of trees which allow cycles and multiple predecessors
+
 * Map / Associative Array
 * Set
 * Priority Qeueues
+
   - relax the strictness of fully sorted sequences (e.g in a binary tree we don't care which child is smaller as long as the node itself is the smallest).
   - relaxation helps to provide us with const time minimum retrieval, and linear time construction.
 
