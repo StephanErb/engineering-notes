@@ -1,41 +1,13 @@
+# Unstructured Inbox
 
-------
+This is a staging area for stuff that might be added in the future.
 
-------
-
-
-# Stuff to look at
-
-## Sources to review
-* Study notes
-    - Compiler Construction
-    - Experimental Economics: Design Elements (e.g., baseline neighborhood) and the basic idea of falsification as supplement material for the algorithm engineering notes
-    - Formal Systems (something in there?)
-    - ~~Advanced Data Structures~~
-    - Parallel Algorithms
-    - Parallel Machines and Parallel Programming
-    - Randomized Algorithms
-    - Computerarchitecture (implications of branch predictions, cache coherence, pipelining, super scalar architecutures ...)
-    - Softwareengineering II
-    - Game Theory (Battle of the sexes :p)
-* Lecture notes and books to skim
-    - Algorithm Engineering
-    - Algorithm II
-    - Algorithms and Data Structures — The Basic Toolbox
-    - Linder's _Things Thy Should have taught you_
-* Books with potential:
-    - Pragmatic Thinking and Learning
-    - Notes from the Pragmatic Programmer
-    - Notes from Head First Software Development (Very light stuff but maybe there is something in there. I used to enjoy reading it.)
-    - ...
+Sometimes stuff seems super important, but reads pretty boring 2 months later. If this is the case, we should drop it.
 
 
-## Random topics ... maybe worth adding, maybe not...
+## Reliability
 
-* Distributed systems
-
-* Scheduling
- - Scheduling strategies in realtime systems: does that teach about SLA based scheduling? E.g. something similar to least-laxity first (LLF) scheudling (deadline - currenttime - remaining computation time of the job)
+Without doubt, there is a connection between what a webshop is doing to what has been done in the embedded system community
 
 * Embedded Systems
   - safety and reliability patterns:
@@ -44,9 +16,8 @@
     + tripple modular redundancy (similar to homogenous, but prevent restarts of the homogenous one),
     + heterogeneous redundancy,
 
-* Security
-  - practice defense in depth
 
+## Algorithms & Data Structures
 
 * Algorithms
   - Find th esimplest form of the problem. It makes it easier to solve than the general case.
@@ -54,7 +25,6 @@
   - Lock free vs wait free concurrency control... No kernel involved in lock free algo (eg mutex or semaphore) but just atomic CPU operations.. To make lock free algos fast, you probably need batching
   - When tuning, there often is not a single optimal solution. Different solutions may be good for different sub classes of the problem (eg passing around large vs small messages with a given allocation cost and pre allocated buffers for small messages)
   - Implement batching on the top most stack level. Disable it on lower levels as it will only increase latency.
-  - Split common Ops into at least two phases: setup and repeated actin eg slow malloc with free list. Maintainable code and good performance.
   - sanders parallels keynote:
     + Design algorithms to be message passing. You gain the flexibility to implement it on shared memory if mneeded
     + when latency matters, throw all PEs on at it even when the algo is inefficient (i.e., bad speedup) -> everything counts as long as you can reduce latency
@@ -63,70 +33,114 @@
   - Algorithm usages:
     + Get an unserstanding where and what for certain stuff is used. Should be specific enough to understand. For example: what are euler tour and list ranking used for?
   - Proper description / intuition needed for:
-    + Suffix Arrays / Suffix Trees
-    + Tricks with virtualen memory
-      * allocate too much (Wassenberg' Trick)
+    + Tricks with virtual memory
+      * allocate too much (Wassenberg' Trick) and then rely on page faults
       * realloc trick (reorder packges instead of copying stuff)
     + Quickselect as a generalization of binary search (probing method, decision on which side to continue, ...)
     + 'Universe Representation' as a new design technique: Represent a dense set(!) over a finite domain by noting its existance in the universe. Is an alternative to representing/storing individual elements. Used by bitmaps, van-emde boas trees. Then often comes with optimization to reduce space requirements.
     + Divide and Conquer as a general solution strategy (we can throw it at almost any problem...)
-    + Good intuition for perf bounds needed, e.g., jump from n^2 to n log n so much more important than the jump from n log n to just n. Also see Programming Pearls p83.
   - Programming by Contract: Pre and post conditions. Loop invariants holding the truth in between: Shown at init time. Then, via mathematical induction shown that it is true also at the end. Assertion showing these invariants are more than just test. Tests are only andecdotal evindence. Assertions test functions also in their scaffolding, when we move from unit tests to component/integration tests. Disabling assertions is like a sailor without a life west (Source: Programming Pearls, Maybe see for more: http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=1203056)
-  - Use back-of-the envelope computation. Try to estimate stuff before you do it.
-  - We have to make clearer that:
-     + We preprocess information into data structures (i.e., saving state) in order to avoid recomputations. (simple form of dynamic programming?! ... the saving state part at least)
-     + Divide and conquer and scanning (solution i from solution i-1) as very common building blocks.
 
-* Design
-  - Unix: Do one thing, do it well. Vs batteries included systems which are powerful and highly configurable? Needs an artificially restricted problem domain whose problem can be solved correct and exhaustively.
-  - If an object may not perform blocking operations, it has to become (explicitly or implicitly)  a state machine.
-  - Don't use global state in libraries. They might be instantiated more than once... Instead, let the user hold the context with user data.
+
+* Nice data structures probably worth covering
+  - _Union-find Data structure:_ Commonly used to find cycles and connected components within graphs.
+  - _Wavelet Trees:_ TODO
+  - _Tournament Trees / Loser Trees_ for _k-way_-merging of large data sets (assuming a large _k_ such as 256)
+  - _2D Min Heaps:_ TODO
+  - _RMQ & LCA:_ TODO
+
+
+## Design Ideas
+
+  - If an object may not perform blocking operations, it has to become (explicitly or implicitly) a state machine. If you have the choice, make this state machine explicit.
   - Map reduce helps with 'late binding'. Dump everything into a log file. Decide what to do with it afterwards. Extract what you want using a brute force computation
-  - Solid principles, component principle?
-  - list of useful diagrams and when to use them (dfd, Feature, fmc,...)?
   - Code as Data: Move special-casing from code (in form of if-else conditions) to data (e.g., table lookups, polymorphic calls (which are also just table lookups using the object type as key))
-  - Bentleys (Programming Pearls) Hierarchy of Programming / Levels of Algorithm Tuning: The lower we are in the Hierarchy the lower the performance impact / improvement we can achieve.
-    + Problem Definition / Requirements
-    + System Structure / Modularisation
-    + Algorithms and Data Structures
-    + Code Tuning
-    + HW Specifica
   - Software engineering is about separating the 'what' from the 'how'.
-  - Dict vs class: use class when you have an invariant to protect (e.g. you cannot change day and months separately as 31.02 will give an invalid date). Use freeform functions if there are no invariants to protect (e.g., change name + firstname independently).
   - Software muss am Ende einer Story so aussehen wie als wäre es von Anfang an so gedacht. Nicht nur so aussehen weil das Feature zu einem bestimmten Zeitpunkt implementiert habe (e.g. weil dann klasse X schon da war und ich mein feature einfach dran flanschen konnte).
- - End-To-End Principle in Systems Design: Don't implement stuff at lower-levels. You'll need to do it upper in the stack anyway. Low er level is only useful as a performance improvlemen. Also applicable to stuff like revision handling and maybe even immutability -> push it to the edges/upper layers. If their usecases are not covered they have to redo it anyway. http://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf 
-- No is temporary, Yes is forever. If you're not sure about a new feature, say no. You can change your mind later
+  - No is temporary, Yes is forever. If you're not sure about a new feature, say no. You can change your mind later
+  - Clean architecutre: Functional core, imperative shell. Core has no i/o, no deps, but lots of branches.... Procedure part has boring execution path as logic remains elsewhere. Core should be reusable, shell is probably less reusable but that is OK.
+* Architecture and design: should be stateless... You should not see its history... As if designed from scratch today
 
- 
+
 * Operations / Debugging:
   - Finding a single root cause is not enough. If a problem 'escaped' or 'jumped' different layers, then you need a fix on all of them!
-  - most of the time you are debugging, most of this time you are looking for information, most of this time is spend becasue the system is unfamiliar. Consistent tool approach is helping here.
 
 * State
   - If you need state, keep it separate. See out of the tar pit paper.
   - there is essential (existential) state and non-essential state. Good example on when you have non-essential state: graph + job queue. You only need the graph and a function on the graph. the job queue itself is not necessary and only some unnecessary additional state. So, even though you got well-tested modules you don't have an ideal design.
-  - to have reasonable maintainability persisted data needs an explicit schema. You pay only once for a schema / data migration. Without schema you probably suffer once and once again with special-casing in all consumers of the data
-  - external naming: don't enforce a user to remember a UUID for something he creates using ur API. He would need state to store it. Let him tell you the he name somehow, instead.
-  - separate state / storage from behaviour. In classes, call into freform function so there is no close state interaction. Leads to smaller classes and easier to test functions.
+  - external naming: don't enforce a user to remember a UUID for something he creates using ur API. He would need state to store it. Let him tell you the he name somehow, instead..
   - data has mass. "trägheit" making it difficult to juggle it around. the more you have the more difficult it gets.
-
-  Problem Definition, Algorithm Design, Data Structure Selection, Writing Correct Code.h
-
 
 * Standardization
   - tighter iteration cycles ar eproductivity multipliers. Fast iterations ylield non-linear value incerase.
   - When you have high marginal cost, people will not experiment
   - standardized tooling has unexpected multiplicative effects
 
-* Europython take aways: domains abstractions matter, technology changes. Types matter at interface level
-
-
 * Testing
   - Goal: give a non changing interface, I want to change the implementation of a class or any of the internal methos withoug having to change the test (no whitebox mocking).
-  - Mock objects tell you what you want to here. But what about the mocked interface? Is it still the same? Write tests to the interface. not to the implementation.
-  - Never write a mock for something you wrote. If you have to, the original design sucked. 
-  - Only mock the expensive stuff (not everything you could). 
-  - For mcoked stuff, have one well tested mock. Share it with users of your library/code. "Fakes": full felshed inmemory implementation of the thing you want to test.
+  - Mock objects tell you what you want to hear. But what about the mocked interface? Is it still the same? Write tests to the interface. not to the implementation.
+  - Only mock the expensive stuff (not everything you could).
+  - For mcoked stuff, have one well tested mock. Share it with users of your library/code. "Fakes": full felshed in-memory implementation of the thing you want to test.
   - Don't test glue code. Test behaviourl interesting suuff. If you tested the extracted function, no need to test the instance method callig it...
   - Don't write tests where there is no clear interface to test.
-  - Don't write a test that will slow you down when you come back with a better idea.
+
+* multi-threaded programming:
+  - when you launch one, be sure how errors are handled for that thread: logging and application tear down are probably a must. a dead thread is no use for anyone.
+
+
+# Abstractions
+
+* Abstractions that are helpful are the ones that significantly reduce complexity.
+* The quality of abstraction is in the weakest link.
+* Duplication is better than the wrong abstraction. It is easer to deal with duplicated code than with a bad, unclear, leaky abstraction. Therefore, only introduce abstractions once their boundaries are clear.
+
+
+# Scalability
+
+there are different aspects of "scale"
+
+* machine / hosts / data sizes
+* organizational scalability (multi-user friendly, users can troubleshoot on their own, intern cannot wrack the side, etc)
+* scalability of the code base (add new features without any major refactoring, have multiple people working on it without stepping on their toes)
+* investment scale
+
+
+# Sys design
+
+* A platform centralizes mistakes (and their corrections)
+* Most engineering time is spend debugging. Most time spend debugging is looking for information. Most time looking for information is spend due to unfamiliia of the code/system. This can be solved on various layers. In particular, a consistent tool approach is helping here..
+* Tighter iteration cycles are productivity multipliers. If yo have high marginal cost, peoople don't experiment. They will not do the high risk high reward projects but the low risk low reward tasks/stories/projects.
+* In summary: standardizes tooling has unexpected (positive) multiplicative effects.
+* OH on unbounded queues, implicit/explicit limits—"same way someone could claim they know when to stop drinking b/c they eventually pass out"
+
+# Software Engineering Socials
+
+* When writing code you get Stockholm syndrome all the time
+* The Peter principle applies to software as well: Peter Principle, the idea that in an organization where promotion is based on achievement, success, and merit, that organization's members will eventually be promoted beyond their level of ability. The principle is commonly phrased, "Employees tend to rise to their level of incompetence." Applying the principle to software
+
+
+# SWE X-ities
+
+* security
+* scalability
+* resilience (and graceful degradation)
+* availability
+* maintainability
+* operatability (incl instrumentation and visibility)
+* simplicity in design of complex systems,
+
+
+# Principles
+
+* Single Responsibility Principle
+    - as of Robert C. Martin: 'one reason to change'
+    - as of Markus Klein: 'knowledge of just one thing'
+* DRY:  If it's domain logic, like calculating the total for a shopping cart then you gotta follow DRY. The risk of application inconsistencies are too high. But if it's anything else then I go with KISS. I really think DRY is far more important for business logic than it is for infrastructure logic. If you calculate what taxes someone owes in two different ways that's terrible. If you serialize two different things in your application in two different ways, probably doesn't matter.
+
+
+# requirements
+
+business requirements only diverge, they never converge. That's why you should not try too hard to squeeze everything into your framework or architecture etc. It will not get better
+
+
+
