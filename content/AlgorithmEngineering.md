@@ -44,6 +44,13 @@ General approach:
 
 There seem to be some simple ideas that have influenced the design of many algorithms and data structures. This list is not authoritative (in particular w.r.t. to naming), it just lists some observations. The ideas seem to be heavily connected and seldomly used in isolation.
 
+* __Atom Decomposition:__ Instead of dealing with elements of objects as a whole, split them into logical subparts. Exploit this inner structure to achieve higher efficiency and eventually solve the problem within a richer model of computation (e.g., compare bits instead of whole integers). Examples:
+
+    - _Radix-Sort_ exploits the inner structure of integers to repeatedly categorize them according to their significant bits.
+    - _X-Fast Tries_ split integer keys into their common prefixes and use a binary search to find the longest common prefix.
+    - _van Emde Boas Trees_ recursively split keys into a top and bottom half in order to efficiently navigate within buckets and summaries over these buckets.
+    - _[Level Ancestor Queries]_ can be implemented via the idea of recursively splitting a tree into its longests paths (_longest path decomposition_) and precomputing the results within these paths.
+
 * __K-Way approach:__ Instead of binary operations that are scattered over a deep recursion, perform a k-way operation. This limits the number of recursion levels and gives room for clever implementations of the (k-way) operation. Examples:
 
     - B-Tree are faster than binary trees in practice. Due to the larger k-way nodes they are more cache efficient.
