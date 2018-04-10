@@ -26,37 +26,36 @@ The data structures commonly seen in the wild (and tought in school) can be clas
 
 * Stacks and Qeueues (FIFO, LIFO, DEQUE)
 
-  - powerful as limited operation subset provide a significant freedom for the implementation
-  - common implementations rely on arrays, lists, ring buffers, and a combination of all of them.
+    - powerful as limited operation subset provide a significant freedom for the implementation
+    - common implementations rely on arrays, lists, ring buffers, and a combination of all of them.
 
 * Arrays (static, dynamic size)
 
-  - the most important thing an array is providing is random access and space efficent storage
-  - both are helpful for operations such as binary search
+    - the most important thing an array is providing is random access and space efficent storage
+    - both are helpful for operations such as binary search
 
 * Lists (single linked, double linked)
 
-  - somewhat a generalisation of stacks and queues as insert/delete are efficient anywhere and not just
-    at the beginning and end.
+    - somewhat a generalisation of stacks and queues as insert/delete are efficient anywhere and not just at the beginning and end.
 
 * Trees
 
-  - it helps to think of a tree as a navigation structure on top of a sorted sequence / list.
-  - essentially it is a 2D generalization of linked list that provide us with $\mathcal{O}(\log n)$ operations in case we ensure the tree does not degenerate back to a list.
+    - it helps to think of a tree as a navigation structure on top of a sorted sequence / list.
+    - essentially it is a 2D generalization of linked list that provide us with $\mathcal{O}(\log n)$ operations in case we ensure the tree does not degenerate back to a list.
 
 * Graphs
 
-  - generalisation of trees which allow cycles and multiple predecessors
+    - generalisation of trees which allow cycles and multiple predecessors
 
 * Sets and Maps / Associative Array
 
-  - Commonly implemented via hashing or based on balanced trees. The latter are more flexible and can provide features like pred/successor queries in navigable sets/maps.
-  - Impose requirements on elements: equality implementation + hashable or orderness
+    - Commonly implemented via hashing or based on balanced trees. The latter are more flexible and can provide features like pred/successor queries in navigable sets/maps.
+    - Impose requirements on elements: equality implementation + hashable or orderness
 
 * Priority Qeueues
 
-  - relax the strictness of fully sorted sequences (e.g in a binary min-heap we don't care which child is smaller).
-  - relaxation helps to provide us with const time minimum retrieval, and linear time construction.
+    - relax the strictness of fully sorted sequences (e.g in a binary min-heap we don't care which child is smaller).
+    - relaxation helps to provide us with const time minimum retrieval, and linear time construction.
 
 In addition to supported set of operations, data structures can also be classified according to a few other dimensions. For example, orderdness:
 
