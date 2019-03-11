@@ -17,7 +17,10 @@ _"programming - playing Lego in a world without gravity"_
 
 * The existence of tests helps with debugging as you know that certain components work, i.e. the bug cannot be within them.
 
-* Unforutnatenly, tests are not only an asset but also a liability. Look for _inflection points_ as the sweet spot between testing effort and covered functionality. In other words, test at the coarsest level of granularity at which you can test your branches with confidence. For example, consider a class that can be serialized and deserialized. A round-trip test may be sufficient, instead of testing both directions individually.
+* Unforutnatenly, tests are not only an asset but also a liability. Look for _inflection points_ as the sweet spot between testing effort and covered functionality.
+
+    - Test at the coarsest level of granularity at which you can test your branches with confidence. For example, consider a class that can be serialized and deserialized. A round-trip test may be sufficient, instead of testing both directions individually.
+    - Don't test clue code using unittests (and maybe even mocks). Only test stuff with behaviour and complexity worth testing.
 
 - Even if you have good tests, don't be afraid to add assertions to your code. Tests are only anecdotal evindence. Assertions test functions also in their scaffolding, when we move from unit tests to component/integration tests, and even in production when all bets are off. The main idea is that it is always better to crash early. Examples:
 

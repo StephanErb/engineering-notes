@@ -91,7 +91,7 @@ In addition to supported set of operations, data structures can also be classifi
 * In principle, the idea for graphs is the same as for trees. However, we might cross a node multiple times and need to prevent visiting it twice. Typical ways to track if a node has already been visited.
 
     - hashsets
-    - node marking
+    - node marking (e.g. completed, partial, blank)
     - node-id-index data structures
 
 * Many graph algorithm just add a spin to the idea: Instead of using a LIFO or FIFO they use a priority queue to decide which node to expand next:
