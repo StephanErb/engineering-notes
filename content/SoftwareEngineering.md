@@ -151,3 +151,5 @@ Securing a system is tough. It requires a process and continous work rather than
 
 * Martin Fowler in UML Distilled
     - "One of my biggest irritations is how organizations consistently fail to learn from their own experience and end up making expensive mistakes time and time again."
+
+* "The more reusable code is, the less usable it is." – Neal Ford, Rebecca Parsons, Patrick Kua
