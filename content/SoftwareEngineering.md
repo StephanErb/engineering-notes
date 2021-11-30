@@ -8,7 +8,7 @@ There is no right solution to design software as it is all about tradeoffs. In a
 as put by @dmontauk:
 
 * Most engineering time is spend debugging
-* Mot time spend debugging is looking for information
+* Most time spend debugging is looking for information
 * Most time looking for information is spend due to unfamilarity with the code/system
 
 If put into a broader context we can deduce:
