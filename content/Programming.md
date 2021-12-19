@@ -4,7 +4,7 @@ _"programming - playing Lego in a world without gravity"_
 
 * _Make it_, _make it run_ (so that the tests pass), _make it better_ (review and refactor until you can honestly say that it is good enough)
 
-* Focus. Eliminate distractions and obstacles. If you cannot stay within _the flow_, you are doing something wrong. Know your editor, your programming language, etc.
+* Focus. Eliminate distractions and obstacles. If you cannot stay within _the flow_, you are doing something wrong. Know your tools, your programming language, etc.
 
 * You need a consistent elevator pitch for your project. It has to capture what the software is meant to solve. Write it down, so that the vision and inherint properties of your project are never forgotten.
 

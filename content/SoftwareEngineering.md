@@ -8,18 +8,24 @@ There is no right solution to design software as it is all about tradeoffs. In a
 as put by @dmontauk:
 
 * Most engineering time is spend debugging
-* Mot time spend debugging is looking for information
-* Most time looking for information is spend due to unfamilarity with the code/system
+* Most time spend debugging is looking for information
+* Most time looking for information is spend due to unfamilarity with the code or system
 
 If put into a broader context we can deduce:
 
  * Engineers spend lot of time debugging because they don't understand their systems
  * Understanding is killed by complexity
  * More code (often) means more complexity
- * We therefore have to achive more with less (code)
+ * We therefore have to achive more (business impact) with less (code)
  * The end-to-end argument as explained below can help to achieve this
 
 See https://www.youtube.com/watch?v=pee-e01DiyI for more details.
+
+In addition, we must get better at:
+
+* focus only on the truly important requirments
+* better teach engineers about the system they work with
+* invest into better observability
 
 
 ## Simplicity
@@ -35,7 +41,7 @@ See https://www.youtube.com/watch?v=pee-e01DiyI for more details.
 
 *  _Achive more with less_ and be like Modern Talking: million of sold records just based on four chords. Don't have 3 different reverse proxies, 5 key values stores, and 2 different databases deployed if one of each would be sufficient.
 
-* If in doubt, leave things out (abstractions, features, ...), because _you ain't gonna need it (YAGNI)_. You can always come back later, so don't waste your time now. In other words: no is temporary, but yes is forvever.
+* If in doubt, leave things out (abstractions, features, ...), because _you ain't gonna need it (YAGNI)_. You can always come back later, so don't waste your time now. If it is truly important it will come up again. In other words: no is temporary, but yes is forvever.
 
 * Complexity does not directly come from code itself, but from the implicit _assumptions_ that it makes (e.g. necessary system libs, how something is used, what distribution of the input looks like, etc). If a new feature does not add new assumptions then it won't cause you that much trouble down the road.
 
@@ -44,10 +50,10 @@ See https://www.youtube.com/watch?v=pee-e01DiyI for more details.
 
 * "A software architecture captures design decisions which are hard to revert or which have to be made early" - Ralf Reussner
 
-* Software lives longer than hardware. Data lives longer than software. Plan and design accordingly:
+* Data lives longer than software. Software lives longer than hardware. Plan and design accordingly:
 
-    - Do not rely on a fixed number of threads but scale with the available cores.
     - Prefer explicit schemas to manage your persistent data (Note: there is an _implicit_ schema in schemaless storage and it will bite you, e.g., the assumption how certain keys are called).
+    - Do not rely on a fixed number of threads but scale with the available cores.
 
 * Design is an _art, not a science_. People writing books on software design have a vested interest in making it seem scientific. Don't become dogmatic about particular design styles. [Source ?]
 
@@ -144,7 +150,7 @@ Securing a system is tough. It requires a process and continous work rather than
 
 * __Peter Principle__
     - The idea that in an organization where promotion is based on success and merit members will eventually be promoted beyond their level of ability. The principle is commonly phrased: "Employees tend to rise to their level of incompetence."
-    - The same applies to software: If you have a successful piece of software and somebody has a feature wish that is even just slightly related, he will want to see it implemented in your software. In short, he wants his feature to be successful as well. This cycle continues until your software is slow, bloated, and buggy.
+    - The same applies to software: If you have a successful piece of software and somebody has a feature wish that is even just slightly related, he will want to see it implemented in your software. In short, he wants his feature to be successful as well. And of course because it is just convenient for him. This cycle continues until your software is slow, bloated, and buggy.
 
 
 ## Quotes

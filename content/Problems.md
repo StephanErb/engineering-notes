@@ -6,3 +6,4 @@
 ## My problem list
 
 * What Software Engineering or design methodology yields simple designs?
+* Software is never done. It is only abandoned. One cause it that complexity has increased so much that it can no longer be maintained. How can this be prevented?
